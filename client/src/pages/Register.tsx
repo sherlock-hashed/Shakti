@@ -35,7 +35,9 @@ export function Register() {
       toast.success("Account created");
       navigate("/dashboard");
     } catch (err) {
-      const msg = err instanceof Error ? err.message : "Could not create account";
+      const msg = err instanceof Error && "response" in err
+        ? (err as any).response?.data?.message || "Could not create account"
+        : "Could not create account";
       setError(msg);
     } finally {
       setLoading(false);

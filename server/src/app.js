@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import authRoutes from "./routes/authRoutes.js";
 
 const app = express();
 
@@ -22,7 +23,7 @@ app.get("/api/health", (_req, res) => {
 });
 
 // --------------- Routes ---------------
-// Auth routes will be mounted here in Phase 3
+app.use("/api/auth", authRoutes);
 // Monitor routes will be mounted here in Phase 4
 
 // --------------- Global Error Handler ---------------

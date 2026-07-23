@@ -10,8 +10,8 @@ import { toast } from "sonner";
 export function Login() {
   const { login, isAuthenticated } = useAuth();
   const navigate = useNavigate();
-  const [email, setEmail] = useState("demo@pulseboard.app");
-  const [password, setPassword] = useState("demo1234");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -32,7 +32,9 @@ export function Login() {
       toast.success("Welcome back");
       navigate("/dashboard");
     } catch (err) {
-      const msg = err instanceof Error ? err.message : "Invalid email or password";
+      const msg = err instanceof Error && "response" in err
+        ? (err as any).response?.data?.message || "Invalid email or password"
+        : "Invalid email or password";
       setError(msg);
     } finally {
       setLoading(false);
