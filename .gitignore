@@ -1,0 +1,37 @@
+# Dependencies
+node_modules
+
+# Build output
+dist
+dist-ssr
+.output
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# TanStack / Nitro leftovers (cleanup)
+.tanstack
+.nitro
+.vinxi
+
+# Wrangler / Cloudflare
+.wrangler/
+.dev.vars
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
