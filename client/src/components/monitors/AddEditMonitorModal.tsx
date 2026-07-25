@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { mockMonitors, type Monitor } from "@/api/mockData";
+import { monitorApi, type Monitor } from "@/api/monitorApi";
 
 interface Props {
   open: boolean;
@@ -77,10 +77,10 @@ export function AddEditMonitorModal({ open, onOpenChange, monitor, onSuccess }: 
     setSubmitting(true);
     try {
       if (isEdit && monitor) {
-        await mockMonitors.update(monitor.id, form);
+        await monitorApi.update(monitor.id, form);
         toast.success("Monitor updated");
       } else {
-        await mockMonitors.create(form);
+        await monitorApi.create(form);
         toast.success("Monitor added successfully");
       }
       onSuccess();

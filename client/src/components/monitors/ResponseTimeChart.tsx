@@ -1,6 +1,6 @@
 import { CartesianGrid, Line, LineChart, ReferenceDot, XAxis, YAxis } from "recharts";
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
-import type { Check } from "@/api/mockData";
+import type { Check } from "@/api/monitorApi";
 
 const config = {
   responseTimeMs: { label: "Response time (ms)", color: "var(--chart-1)" },

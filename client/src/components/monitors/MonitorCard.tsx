@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { StatusBadge } from "./StatusBadge";
-import type { Monitor } from "@/api/mockData";
+import type { Monitor } from "@/api/monitorApi";
 import { formatRelativeTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
 

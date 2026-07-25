@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { mockMonitors, type Monitor } from "@/api/mockData";
+import { monitorApi, type Monitor } from "@/api/monitorApi";
 
 export function useMonitors(pollMs = 20_000) {
   const [monitors, setMonitors] = useState<Monitor[] | null>(null);
@@ -10,7 +10,7 @@ export function useMonitors(pollMs = 20_000) {
   const load = useCallback(async (isPoll = false) => {
     if (!isPoll) setLoading(true);
     try {
-      const data = await mockMonitors.list();
+      const data = await monitorApi.list();
       if (mounted.current) {
         setMonitors(data);
         setError(null);

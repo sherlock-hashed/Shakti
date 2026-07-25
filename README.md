@@ -76,8 +76,14 @@ cd client && npm run dev    # Terminal 2: UI on :5173
 | Method | Endpoint              | Description              | Auth |
 | ------ | --------------------- | ------------------------ | ---- |
 | GET    | `/api/health`         | Server health check      | No   |
-
-*More endpoints will be added as development progresses.*
+| POST   | `/api/auth/register`  | Register a new user      | No   |
+| POST   | `/api/auth/login`     | Login (returns JWT)      | No   |
+| GET    | `/api/auth/me`        | Get current user         | Yes  |
+| GET    | `/api/monitors`       | List all monitors        | Yes  |
+| GET    | `/api/monitors/:id`   | Get monitor + checks     | Yes  |
+| POST   | `/api/monitors`       | Create a monitor         | Yes  |
+| PATCH  | `/api/monitors/:id`   | Update a monitor         | Yes  |
+| DELETE | `/api/monitors/:id`   | Delete a monitor         | Yes  |
 
 ## License
 

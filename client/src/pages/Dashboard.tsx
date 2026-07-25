@@ -42,7 +42,7 @@ import { MonitorCard } from "@/components/monitors/MonitorCard";
 import { AddEditMonitorModal } from "@/components/monitors/AddEditMonitorModal";
 import { AlertReportsModal } from "@/components/monitors/AlertReportsModal";
 import { useMonitors } from "@/hooks/useMonitors";
-import { mockMonitors, type Monitor } from "@/api/mockData";
+import { monitorApi, type Monitor } from "@/api/monitorApi";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { exportMonitorsToCSV, exportMonitorsToPDF } from "@/lib/exportMonitors";
 
@@ -108,7 +108,7 @@ function DashboardView() {
     if (!toDelete) return;
     setDeleting(true);
     try {
-      await mockMonitors.remove(toDelete.id);
+      await monitorApi.remove(toDelete.id);
       toast.success("Monitor deleted");
       setToDelete(null);
       refresh();
@@ -148,11 +148,11 @@ function DashboardView() {
     setBulkBusy(true);
     try {
       if (bulkAction === "delete") {
-        await Promise.all(ids.map((id) => mockMonitors.remove(id)));
+        await Promise.all(ids.map((id) => monitorApi.remove(id)));
         toast.success(`Deleted ${ids.length} monitor${ids.length === 1 ? "" : "s"}`);
       } else {
         const isActive = bulkAction === "activate";
-        await Promise.all(ids.map((id) => mockMonitors.update(id, { isActive })));
+        await Promise.all(ids.map((id) => monitorApi.update(id, { isActive })));
         toast.success(
           `${isActive ? "Activated" : "Paused"} ${ids.length} monitor${ids.length === 1 ? "" : "s"}`,
         );

@@ -1,6 +1,6 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import type { Monitor } from "@/api/mockData";
+import type { Monitor } from "@/api/monitorApi";
 
 function ts() {
   const d = new Date();

@@ -28,7 +28,7 @@ import { StatusBadge } from "@/components/monitors/StatusBadge";
 import { ResponseTimeChart } from "@/components/monitors/ResponseTimeChart";
 import { RecentChecksTable } from "@/components/monitors/RecentChecksTable";
 import { AddEditMonitorModal } from "@/components/monitors/AddEditMonitorModal";
-import { mockMonitors, type MonitorDetail as MonitorDetailType } from "@/api/mockData";
+import { monitorApi, type MonitorDetail as MonitorDetailType } from "@/api/monitorApi";
 import { formatRelativeTime } from "@/lib/format";
 import { exportChecksToCSV, exportChecksToPDF } from "@/lib/exportChecks";
 import { toast as sonnerToast } from "sonner";
@@ -61,7 +61,7 @@ function MonitorDetailView() {
     setLoading(true);
     setError(null);
     try {
-      const d = await mockMonitors.get(id);
+      const d = await monitorApi.get(id);
       setData(d);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to load monitor");
@@ -81,7 +81,7 @@ function MonitorDetailView() {
     if (!id) return;
     setDeleting(true);
     try {
-      await mockMonitors.remove(id);
+      await monitorApi.remove(id);
       toast.success("Monitor deleted");
       navigate("/dashboard");
     } catch (e) {

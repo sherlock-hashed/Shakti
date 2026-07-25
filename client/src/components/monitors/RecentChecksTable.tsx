@@ -2,7 +2,7 @@ import { useState } from "react";
 import { AlertTriangle, ArrowDown, ArrowUp, ArrowUpDown, CircleCheck, CircleX } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import type { Check } from "@/api/mockData";
+import type { Check } from "@/api/monitorApi";
 
 type SortKey = "checkedAt" | "status" | "responseTimeMs";
 type SortDir = "asc" | "desc";

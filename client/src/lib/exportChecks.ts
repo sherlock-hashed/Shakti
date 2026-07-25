@@ -1,6 +1,6 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import type { Check, MonitorDetail } from "@/api/mockData";
+import type { Check, MonitorDetail } from "@/api/monitorApi";
 
 function safeName(name: string) {
   return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") || "monitor";
