@@ -1,15 +1,5 @@
 import mongoose from "mongoose";
 
-const checkSchema = new mongoose.Schema(
-  {
-    statusCode: { type: Number, required: true },
-    responseTimeMs: { type: Number, required: true },
-    isUp: { type: Boolean, required: true },
-    checkedAt: { type: Date, default: Date.now },
-  },
-  { _id: true }
-);
-
 const monitorSchema = new mongoose.Schema(
   {
     user: {
@@ -76,10 +66,6 @@ const monitorSchema = new mongoose.Schema(
       default: 5,
       min: [1, "Downtime threshold must be at least 1 minute"],
       max: [1440, "Downtime threshold cannot exceed 1440 minutes"],
-    },
-    checks: {
-      type: [checkSchema],
-      default: [],
     },
   },
   { timestamps: true }

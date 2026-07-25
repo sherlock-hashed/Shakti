@@ -1,4 +1,5 @@
 import Monitor from "../models/Monitor.js";
+import CheckLog from "../models/CheckLog.js";
 
 /**
  * Format a monitor document to match the frontend's expected shape:
@@ -70,18 +71,31 @@ export async function getMonitor(req, res, next) {
     const doc = await Monitor.findOne({
       _id: req.params.id,
       user: req.user._id,
-    });
+    }).lean();
 
     if (!doc) {
       return res.status(404).json({ message: "Monitor not found" });
     }
 
+    // Fetch recent checks from CheckLog collection (last 100, newest first)
+    const checkLogs = await CheckLog.find({ monitor: doc._id })
+      .sort({ checkedAt: -1 })
+      .limit(100)
+      .lean();
+
+    const checks = checkLogs.map((c) => ({
+      id: c._id.toString(),
+      statusCode: c.statusCode,
+      responseTimeMs: c.responseTimeMs,
+      isUp: c.isUp,
+      checkedAt: c.checkedAt.toISOString(),
+    }));
+
     res.json({
       ...formatMonitor(doc),
-      checks: doc.checks.map(formatCheck),
+      checks,
     });
   } catch (error) {
-    // Handle invalid ObjectId format
     if (error.name === "CastError") {
       return res.status(404).json({ message: "Monitor not found" });
     }
@@ -193,6 +207,9 @@ export async function deleteMonitor(req, res, next) {
     if (!doc) {
       return res.status(404).json({ message: "Monitor not found" });
     }
+
+    // Cascade: remove all associated check logs
+    await CheckLog.deleteMany({ monitor: doc._id });
 
     res.json({ success: true });
   } catch (error) {
