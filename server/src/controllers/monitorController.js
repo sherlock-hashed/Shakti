@@ -41,7 +41,6 @@ export async function listMonitors(req, res, next) {
   try {
     // Fetch all monitors for the authenticated user (without the checks array for list view)
     const docs = await Monitor.find({ user: req.user._id })
-      .select("-checks")
       .sort({ createdAt: -1 })
       .lean();
 
@@ -83,13 +82,7 @@ export async function getMonitor(req, res, next) {
       .limit(100)
       .lean();
 
-    const checks = checkLogs.map((c) => ({
-      id: c._id.toString(),
-      statusCode: c.statusCode,
-      responseTimeMs: c.responseTimeMs,
-      isUp: c.isUp,
-      checkedAt: c.checkedAt.toISOString(),
-    }));
+    const checks = checkLogs.map(formatCheck);
 
     res.json({
       ...formatMonitor(doc),
@@ -172,7 +165,7 @@ export async function updateMonitor(req, res, next) {
       { _id: req.params.id, user: req.user._id },
       updates,
       { new: true, runValidators: true }
-    ).select("-checks");
+    );
 
     if (!doc) {
       return res.status(404).json({ message: "Monitor not found" });
