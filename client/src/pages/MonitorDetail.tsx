@@ -31,7 +31,6 @@ import { AddEditMonitorModal } from "@/components/monitors/AddEditMonitorModal";
 import { monitorApi, type MonitorDetail as MonitorDetailType } from "@/api/monitorApi";
 import { formatRelativeTime } from "@/lib/format";
 import { exportChecksToCSV, exportChecksToPDF } from "@/lib/exportChecks";
-import { toast as sonnerToast } from "sonner";
 
 export function MonitorDetail() {
   useEffect(() => {
@@ -107,9 +106,9 @@ function MonitorDetailView() {
     try {
       if (fmt === "csv") exportChecksToCSV(data);
       else exportChecksToPDF(data);
-      sonnerToast.success(`Exported ${fmt.toUpperCase()} report`);
+      toast.success(`Exported ${fmt.toUpperCase()} report`);
     } catch (e) {
-      sonnerToast.error(e instanceof Error ? e.message : "Export failed");
+      toast.error(e instanceof Error ? e.message : "Export failed");
     }
   };
 
