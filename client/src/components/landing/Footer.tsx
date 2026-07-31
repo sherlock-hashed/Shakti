@@ -19,25 +19,71 @@ export function Footer() {
         <div>
           <div className="mb-3 text-sm font-semibold">Product</div>
           <ul className="space-y-2 text-sm text-muted-foreground">
-            <li><a href="#features" className="hover:text-foreground">Features</a></li>
-            <li><a href="#how-it-works" className="hover:text-foreground">How it works</a></li>
-            <li><Link to="/login" className="hover:text-foreground">Log in</Link></li>
-            <li><Link to="/register" className="hover:text-foreground">Sign up</Link></li>
+            <li>
+              <a href="#features" className="hover:text-foreground">
+                Features
+              </a>
+            </li>
+            <li>
+              <a href="#how-it-works" className="hover:text-foreground">
+                How it works
+              </a>
+            </li>
+            <li>
+              <Link to="/login" className="hover:text-foreground">
+                Log in
+              </Link>
+            </li>
+            <li>
+              <Link to="/register" className="hover:text-foreground">
+                Sign up
+              </Link>
+            </li>
           </ul>
         </div>
         <div>
           <div className="mb-3 text-sm font-semibold">Resources</div>
           <ul className="space-y-2 text-sm text-muted-foreground">
-            <li><a href="#" className="inline-flex items-center gap-1.5 hover:text-foreground"><Github className="h-3.5 w-3.5" />GitHub repo</a></li>
-            <li><a href="#" className="hover:text-foreground">Portfolio</a></li>
+            <li>
+              <a
+                href="#"
+                className="inline-flex items-center gap-1.5 hover:text-foreground"
+              >
+                <Github className="h-3.5 w-3.5" />
+                GitHub repo
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-foreground">
+                Portfolio
+              </a>
+            </li>
           </ul>
         </div>
         <div>
           <div className="mb-3 text-sm font-semibold">Connect</div>
           <div className="flex items-center gap-2 text-muted-foreground">
-            <a href="#" aria-label="GitHub" className="grid h-9 w-9 place-items-center rounded-lg border border-border transition-colors hover:border-primary/40 hover:text-foreground"><Github className="h-4 w-4" /></a>
-            <a href="#" aria-label="LinkedIn" className="grid h-9 w-9 place-items-center rounded-lg border border-border transition-colors hover:border-primary/40 hover:text-foreground"><Linkedin className="h-4 w-4" /></a>
-            <a href="#" aria-label="Email" className="grid h-9 w-9 place-items-center rounded-lg border border-border transition-colors hover:border-primary/40 hover:text-foreground"><Mail className="h-4 w-4" /></a>
+            <a
+              href="#"
+              aria-label="GitHub"
+              className="grid h-9 w-9 place-items-center rounded-lg border border-border transition-colors hover:border-primary/40 hover:text-foreground"
+            >
+              <Github className="h-4 w-4" />
+            </a>
+            <a
+              href="#"
+              aria-label="LinkedIn"
+              className="grid h-9 w-9 place-items-center rounded-lg border border-border transition-colors hover:border-primary/40 hover:text-foreground"
+            >
+              <Linkedin className="h-4 w-4" />
+            </a>
+            <a
+              href="#"
+              aria-label="Email"
+              className="grid h-9 w-9 place-items-center rounded-lg border border-border transition-colors hover:border-primary/40 hover:text-foreground"
+            >
+              <Mail className="h-4 w-4" />
+            </a>
           </div>
         </div>
       </div>

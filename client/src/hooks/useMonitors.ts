@@ -16,7 +16,8 @@ export function useMonitors(pollMs = 20_000) {
         setError(null);
       }
     } catch (e) {
-      if (mounted.current) setError(e instanceof Error ? e.message : "Failed to load monitors");
+      if (mounted.current)
+        setError(e instanceof Error ? e.message : "Failed to load monitors");
     } finally {
       if (mounted.current && !isPoll) setLoading(false);
     }

@@ -3,10 +3,14 @@ import { cn } from "@/lib/utils";
 
 type Status = "up" | "down" | "pending";
 
-const map: Record<Status, { label: string; className: string; Icon: typeof CircleCheck }> = {
+const map: Record<
+  Status,
+  { label: string; className: string; Icon: typeof CircleCheck }
+> = {
   up: {
     label: "Up",
-    className: "bg-[color:var(--success)]/10 text-[color:var(--success)] border-[color:var(--success)]/25",
+    className:
+      "bg-[color:var(--success)]/10 text-[color:var(--success)] border-[color:var(--success)]/25",
     Icon: CircleCheck,
   },
   down: {
@@ -21,7 +25,13 @@ const map: Record<Status, { label: string; className: string; Icon: typeof Circl
   },
 };
 
-export function StatusBadge({ status, className }: { status: Status; className?: string }) {
+export function StatusBadge({
+  status,
+  className,
+}: {
+  status: Status;
+  className?: string;
+}) {
   const { label, className: cls, Icon } = map[status];
   return (
     <span

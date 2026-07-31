@@ -1,3 +1,4 @@
+import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Activity, Lock, Mail, RefreshCw } from "lucide-react";
@@ -32,8 +33,8 @@ export function Login() {
       toast.success("Welcome back");
       navigate("/dashboard");
     } catch (err) {
-      const msg = err instanceof Error && "response" in err
-        ? (err as any).response?.data?.message || "Invalid email or password"
+      const msg = axios.isAxiosError(err)
+        ? err.response?.data?.message || "Invalid email or password"
         : "Invalid email or password";
       setError(msg);
     } finally {
@@ -46,17 +47,43 @@ export function Login() {
       title="Welcome back"
       subtitle="Log in to your Pulseboard dashboard."
       footer={
-        <>Don't have an account? <Link to="/register" className="font-medium text-primary hover:underline">Sign up</Link></>
+        <>
+          Don't have an account?{" "}
+          <Link
+            to="/register"
+            className="font-medium text-primary hover:underline"
+          >
+            Sign up
+          </Link>
+        </>
       }
     >
       <form onSubmit={submit} className="space-y-4">
         <FieldWithIcon icon={Mail}>
           <Label htmlFor="email">Email</Label>
-          <Input id="email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required className="pl-9" placeholder="you@company.com" />
+          <Input
+            id="email"
+            type="email"
+            autoComplete="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="pl-9"
+            placeholder="you@company.com"
+          />
         </FieldWithIcon>
         <FieldWithIcon icon={Lock}>
           <Label htmlFor="password">Password</Label>
-          <Input id="password" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required className="pl-9" placeholder="••••••••" />
+          <Input
+            id="password"
+            type="password"
+            autoComplete="current-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            className="pl-9"
+            placeholder="••••••••"
+          />
         </FieldWithIcon>
         {error && <p className="text-sm text-destructive">{error}</p>}
         <Button type="submit" className="w-full" disabled={loading}>
@@ -92,25 +119,38 @@ export function AuthShell({
           <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
           <p className="mt-1.5 text-sm text-muted-foreground">{subtitle}</p>
           <div className="mt-8">{children}</div>
-          <p className="mt-6 text-center text-sm text-muted-foreground">{footer}</p>
+          <p className="mt-6 text-center text-sm text-muted-foreground">
+            {footer}
+          </p>
         </div>
         <div />
       </div>
-      <div className="relative hidden overflow-hidden lg:block" style={{ background: "var(--gradient-hero)" }}>
+      <div
+        className="relative hidden overflow-hidden lg:block"
+        style={{ background: "var(--gradient-hero)" }}
+      >
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,oklch(0.62_0.17_245/0.25),transparent_60%)]" />
         <div className="relative flex h-full flex-col items-center justify-center p-12">
           <blockquote className="max-w-md text-center text-lg text-foreground/80">
             "Pulseboard tells me the second our checkout endpoint hiccups —
             usually before anyone notices."
           </blockquote>
-          <div className="mt-4 text-xs text-muted-foreground">— Engineer at a small SaaS</div>
+          <div className="mt-4 text-xs text-muted-foreground">
+            — Engineer at a small SaaS
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
-export function FieldWithIcon({ icon: Icon, children }: { icon: typeof Mail; children: React.ReactNode }) {
+export function FieldWithIcon({
+  icon: Icon,
+  children,
+}: {
+  icon: typeof Mail;
+  children: React.ReactNode;
+}) {
   return (
     <div className="space-y-1.5">
       {Array.isArray(children) ? children[0] : null}

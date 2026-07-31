@@ -2,10 +2,23 @@ import { useEffect, useState } from "react";
 import { RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { monitorApi, type Monitor } from "@/api/monitorApi";
 
@@ -16,7 +29,12 @@ interface Props {
   onSuccess: () => void;
 }
 
-export function AddEditMonitorModal({ open, onOpenChange, monitor, onSuccess }: Props) {
+export function AddEditMonitorModal({
+  open,
+  onOpenChange,
+  monitor,
+  onSuccess,
+}: Props) {
   const isEdit = !!monitor;
   const [form, setForm] = useState({
     name: "",
@@ -70,10 +88,17 @@ export function AddEditMonitorModal({ open, onOpenChange, monitor, onSuccess }: 
     e.preventDefault();
     setError(null);
     if (!form.name.trim()) return setError("Name is required");
-    if (!isValidUrl(form.url)) return setError("Please enter a valid URL (http or https)");
-    if (form.expectedStatusCode < 100 || form.expectedStatusCode > 599) return setError("Status code must be between 100 and 599");
-    if (form.latencyThresholdMs < 50 || form.latencyThresholdMs > 60_000) return setError("Latency threshold must be between 50 and 60000 ms");
-    if (form.downtimeThresholdMinutes < 1 || form.downtimeThresholdMinutes > 1440) return setError("Downtime threshold must be between 1 and 1440 minutes");
+    if (!isValidUrl(form.url))
+      return setError("Please enter a valid URL (http or https)");
+    if (form.expectedStatusCode < 100 || form.expectedStatusCode > 599)
+      return setError("Status code must be between 100 and 599");
+    if (form.latencyThresholdMs < 50 || form.latencyThresholdMs > 60_000)
+      return setError("Latency threshold must be between 50 and 60000 ms");
+    if (
+      form.downtimeThresholdMinutes < 1 ||
+      form.downtimeThresholdMinutes > 1440
+    )
+      return setError("Downtime threshold must be between 1 and 1440 minutes");
     setSubmitting(true);
     try {
       if (isEdit && monitor) {
@@ -100,27 +125,60 @@ export function AddEditMonitorModal({ open, onOpenChange, monitor, onSuccess }: 
         <DialogHeader>
           <DialogTitle>{isEdit ? "Edit monitor" : "Add a monitor"}</DialogTitle>
           <DialogDescription>
-            {isEdit ? "Update how this endpoint is checked." : "Paste an endpoint URL and choose how often to check it."}
+            {isEdit
+              ? "Update how this endpoint is checked."
+              : "Paste an endpoint URL and choose how often to check it."}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={submit} className="space-y-4">
           <div className="space-y-1.5">
             <Label htmlFor="name">Name</Label>
-            <Input id="name" placeholder="Production API" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+            <Input
+              id="name"
+              placeholder="Production API"
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+            />
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="url">URL</Label>
-            <Input id="url" placeholder="https://api.example.com/health" className="font-mono text-sm" value={form.url} onChange={(e) => setForm({ ...form, url: e.target.value })} />
+            <Input
+              id="url"
+              placeholder="https://api.example.com/health"
+              className="font-mono text-sm"
+              value={form.url}
+              onChange={(e) => setForm({ ...form, url: e.target.value })}
+            />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label htmlFor="code">Expected status</Label>
-              <Input id="code" type="number" min={100} max={599} value={form.expectedStatusCode} onChange={(e) => setForm({ ...form, expectedStatusCode: Number(e.target.value) })} className="font-mono" />
+              <Input
+                id="code"
+                type="number"
+                min={100}
+                max={599}
+                value={form.expectedStatusCode}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    expectedStatusCode: Number(e.target.value),
+                  })
+                }
+                className="font-mono"
+              />
             </div>
             <div className="space-y-1.5">
               <Label>Check every</Label>
-              <Select value={String(form.intervalMinutes)} onValueChange={(v) => setForm({ ...form, intervalMinutes: Number(v) })}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
+              <Select
+                value={String(form.intervalMinutes)}
+                onValueChange={(v) =>
+                  setForm({ ...form, intervalMinutes: Number(v) })
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="1">1 minute</SelectItem>
                   <SelectItem value="5">5 minutes</SelectItem>
@@ -133,7 +191,9 @@ export function AddEditMonitorModal({ open, onOpenChange, monitor, onSuccess }: 
           <div className="rounded-lg border border-border p-3">
             <div className="mb-3">
               <div className="text-sm font-medium">Alert thresholds</div>
-              <p className="text-xs text-muted-foreground">Checks that exceed these limits are flagged as violations.</p>
+              <p className="text-xs text-muted-foreground">
+                Checks that exceed these limits are flagged as violations.
+              </p>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
@@ -146,7 +206,12 @@ export function AddEditMonitorModal({ open, onOpenChange, monitor, onSuccess }: 
                   step={50}
                   className="font-mono"
                   value={form.latencyThresholdMs}
-                  onChange={(e) => setForm({ ...form, latencyThresholdMs: Number(e.target.value) })}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      latencyThresholdMs: Number(e.target.value),
+                    })
+                  }
                 />
               </div>
               <div className="space-y-1.5">
@@ -158,23 +223,45 @@ export function AddEditMonitorModal({ open, onOpenChange, monitor, onSuccess }: 
                   max={1440}
                   className="font-mono"
                   value={form.downtimeThresholdMinutes}
-                  onChange={(e) => setForm({ ...form, downtimeThresholdMinutes: Number(e.target.value) })}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      downtimeThresholdMinutes: Number(e.target.value),
+                    })
+                  }
                 />
               </div>
             </div>
           </div>
           <div className="flex items-center justify-between rounded-lg border border-border p-3">
             <div>
-              <Label htmlFor="active" className="text-sm">Active</Label>
-              <p className="text-xs text-muted-foreground">Pause to stop scheduled checks.</p>
+              <Label htmlFor="active" className="text-sm">
+                Active
+              </Label>
+              <p className="text-xs text-muted-foreground">
+                Pause to stop scheduled checks.
+              </p>
             </div>
-            <Switch id="active" checked={form.isActive} onCheckedChange={(v) => setForm({ ...form, isActive: v })} />
+            <Switch
+              id="active"
+              checked={form.isActive}
+              onCheckedChange={(v) => setForm({ ...form, isActive: v })}
+            />
           </div>
           {error && <p className="text-sm text-destructive">{error}</p>}
           <DialogFooter>
-            <Button type="button" variant="ghost" onClick={() => onOpenChange(false)} disabled={submitting}>Cancel</Button>
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => onOpenChange(false)}
+              disabled={submitting}
+            >
+              Cancel
+            </Button>
             <Button type="submit" disabled={submitting}>
-              {submitting && <RefreshCw className="mr-2 h-3.5 w-3.5 animate-spin" />}
+              {submitting && (
+                <RefreshCw className="mr-2 h-3.5 w-3.5 animate-spin" />
+              )}
               {isEdit ? "Save changes" : "Add monitor"}
             </Button>
           </DialogFooter>

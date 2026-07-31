@@ -13,9 +13,21 @@ function statusLabel(m: Monitor) {
   return m.status.charAt(0).toUpperCase() + m.status.slice(1);
 }
 
-export function exportMonitorsToCSV(monitors: Monitor[], filterLabel = "monitors") {
+export function exportMonitorsToCSV(
+  monitors: Monitor[],
+  filterLabel = "monitors",
+) {
   const rows = [
-    ["Name", "URL", "Status", "Uptime (24h)", "Interval (min)", "Latency threshold (ms)", "Downtime threshold (min)", "Last checked"],
+    [
+      "Name",
+      "URL",
+      "Status",
+      "Uptime (24h)",
+      "Interval (min)",
+      "Latency threshold (ms)",
+      "Downtime threshold (min)",
+      "Last checked",
+    ],
     ...monitors.map((m) => [
       m.name,
       m.url,
@@ -41,7 +53,10 @@ export function exportMonitorsToCSV(monitors: Monitor[], filterLabel = "monitors
   URL.revokeObjectURL(url);
 }
 
-export function exportMonitorsToPDF(monitors: Monitor[], filterLabel = "monitors") {
+export function exportMonitorsToPDF(
+  monitors: Monitor[],
+  filterLabel = "monitors",
+) {
   const doc = new jsPDF({ unit: "pt", format: "a4", orientation: "landscape" });
   doc.setFont("helvetica", "bold");
   doc.setFontSize(18);
@@ -56,7 +71,18 @@ export function exportMonitorsToPDF(monitors: Monitor[], filterLabel = "monitors
 
   autoTable(doc, {
     startY: 120,
-    head: [["Name", "URL", "Status", "Uptime 24h", "Interval", "Latency thr.", "Downtime thr.", "Last checked"]],
+    head: [
+      [
+        "Name",
+        "URL",
+        "Status",
+        "Uptime 24h",
+        "Interval",
+        "Latency thr.",
+        "Downtime thr.",
+        "Last checked",
+      ],
+    ],
     body: monitors.map((m) => [
       m.name,
       m.url,

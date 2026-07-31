@@ -40,7 +40,10 @@ export const monitorApi = {
   },
 
   async create(
-    input: Omit<Monitor, "id" | "status" | "uptimePercent24h" | "lastCheckedAt">
+    input: Omit<
+      Monitor,
+      "id" | "status" | "uptimePercent24h" | "lastCheckedAt"
+    >,
   ): Promise<Monitor> {
     const res = await axiosInstance.post("/monitors", input);
     return res.data;

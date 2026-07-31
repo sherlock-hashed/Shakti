@@ -1,6 +1,20 @@
 import { useState } from "react";
-import { AlertTriangle, ArrowDown, ArrowUp, ArrowUpDown, CircleCheck, CircleX } from "lucide-react";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  AlertTriangle,
+  ArrowDown,
+  ArrowUp,
+  ArrowUpDown,
+  CircleCheck,
+  CircleX,
+} from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import type { Check } from "@/api/monitorApi";
 
@@ -26,9 +40,12 @@ export function RecentChecksTable({ checks, latencyThresholdMs }: Props) {
 
   const sorted = [...checks].sort((a, b) => {
     let cmp = 0;
-    if (sortKey === "checkedAt") cmp = new Date(a.checkedAt).getTime() - new Date(b.checkedAt).getTime();
-    else if (sortKey === "responseTimeMs") cmp = a.responseTimeMs - b.responseTimeMs;
-    else if (sortKey === "status") cmp = Number(a.isUp) - Number(b.isUp) || a.statusCode - b.statusCode;
+    if (sortKey === "checkedAt")
+      cmp = new Date(a.checkedAt).getTime() - new Date(b.checkedAt).getTime();
+    else if (sortKey === "responseTimeMs")
+      cmp = a.responseTimeMs - b.responseTimeMs;
+    else if (sortKey === "status")
+      cmp = Number(a.isUp) - Number(b.isUp) || a.statusCode - b.statusCode;
     return sortDir === "asc" ? cmp : -cmp;
   });
 
@@ -39,13 +56,30 @@ export function RecentChecksTable({ checks, latencyThresholdMs }: Props) {
           <TableRow>
             <TableHead className="w-10"></TableHead>
             <TableHead>
-              <SortButton label="Timestamp" active={sortKey === "checkedAt"} dir={sortDir} onClick={() => toggleSort("checkedAt")} />
+              <SortButton
+                label="Timestamp"
+                active={sortKey === "checkedAt"}
+                dir={sortDir}
+                onClick={() => toggleSort("checkedAt")}
+              />
             </TableHead>
             <TableHead className="text-right">
-              <SortButton label="Status" active={sortKey === "status"} dir={sortDir} onClick={() => toggleSort("status")} align="right" />
+              <SortButton
+                label="Status"
+                active={sortKey === "status"}
+                dir={sortDir}
+                onClick={() => toggleSort("status")}
+                align="right"
+              />
             </TableHead>
             <TableHead className="text-right">
-              <SortButton label="Response time" active={sortKey === "responseTimeMs"} dir={sortDir} onClick={() => toggleSort("responseTimeMs")} align="right" />
+              <SortButton
+                label="Response time"
+                active={sortKey === "responseTimeMs"}
+                dir={sortDir}
+                onClick={() => toggleSort("responseTimeMs")}
+                align="right"
+              />
             </TableHead>
             <TableHead className="text-right">Threshold</TableHead>
           </TableRow>
@@ -55,10 +89,20 @@ export function RecentChecksTable({ checks, latencyThresholdMs }: Props) {
             const slow = c.isUp && c.responseTimeMs > latencyThresholdMs;
             const violates = !c.isUp || slow;
             return (
-              <TableRow key={c.id} className={cn(violates && "bg-destructive/[0.04]")}>
+              <TableRow
+                key={c.id}
+                className={cn(violates && "bg-destructive/[0.04]")}
+              >
                 <TableCell>
                   {c.isUp ? (
-                    <CircleCheck className={cn("h-4 w-4", slow ? "text-[color:var(--warning)]" : "text-[color:var(--success)]")} />
+                    <CircleCheck
+                      className={cn(
+                        "h-4 w-4",
+                        slow
+                          ? "text-[color:var(--warning)]"
+                          : "text-[color:var(--success)]",
+                      )}
+                    />
                   ) : (
                     <CircleX className="h-4 w-4 text-destructive" />
                   )}
@@ -67,9 +111,18 @@ export function RecentChecksTable({ checks, latencyThresholdMs }: Props) {
                   {new Date(c.checkedAt).toLocaleString()}
                 </TableCell>
                 <TableCell className="text-right font-mono text-xs">
-                  <span className={c.isUp ? "text-foreground" : "text-destructive"}>{c.statusCode}</span>
+                  <span
+                    className={c.isUp ? "text-foreground" : "text-destructive"}
+                  >
+                    {c.statusCode}
+                  </span>
                 </TableCell>
-                <TableCell className={cn("text-right font-mono text-xs", slow && "font-semibold text-[color:var(--warning)]")}>
+                <TableCell
+                  className={cn(
+                    "text-right font-mono text-xs",
+                    slow && "font-semibold text-[color:var(--warning)]",
+                  )}
+                >
                   {c.responseTimeMs}ms
                 </TableCell>
                 <TableCell className="text-right">
@@ -86,7 +139,9 @@ export function RecentChecksTable({ checks, latencyThresholdMs }: Props) {
                       {!c.isUp ? "Down" : "Slow"}
                     </span>
                   ) : (
-                    <span className="text-[10px] text-muted-foreground">OK</span>
+                    <span className="text-[10px] text-muted-foreground">
+                      OK
+                    </span>
                   )}
                 </TableCell>
               </TableRow>

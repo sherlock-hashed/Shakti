@@ -70,7 +70,9 @@ function DashboardView() {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<FilterKey>("all");
   const [selected, setSelected] = useState<Set<string>>(new Set());
-  const [bulkAction, setBulkAction] = useState<"pause" | "activate" | "delete" | null>(null);
+  const [bulkAction, setBulkAction] = useState<
+    "pause" | "activate" | "delete" | null
+  >(null);
   const [bulkBusy, setBulkBusy] = useState(false);
 
   const counts = useMemo(() => {
@@ -88,9 +90,15 @@ function DashboardView() {
     const q = query.trim().toLowerCase();
     return list.filter((m) => {
       if (filter === "up" && !(m.isActive && m.status === "up")) return false;
-      if (filter === "down" && !(m.isActive && m.status === "down")) return false;
+      if (filter === "down" && !(m.isActive && m.status === "down"))
+        return false;
       if (filter === "paused" && m.isActive) return false;
-      if (q && !m.name.toLowerCase().includes(q) && !m.url.toLowerCase().includes(q)) return false;
+      if (
+        q &&
+        !m.name.toLowerCase().includes(q) &&
+        !m.url.toLowerCase().includes(q)
+      )
+        return false;
       return true;
     });
   }, [monitors, query, filter]);
@@ -149,7 +157,9 @@ function DashboardView() {
     try {
       if (bulkAction === "delete") {
         await Promise.all(ids.map((id) => monitorApi.remove(id)));
-        toast.success(`Deleted ${ids.length} monitor${ids.length === 1 ? "" : "s"}`);
+        toast.success(
+          `Deleted ${ids.length} monitor${ids.length === 1 ? "" : "s"}`,
+        );
       } else {
         const isActive = bulkAction === "activate";
         await Promise.all(ids.map((id) => monitorApi.update(id, { isActive })));
@@ -176,7 +186,9 @@ function DashboardView() {
     try {
       if (fmt === "csv") exportMonitorsToCSV(filtered, filterLabel);
       else exportMonitorsToPDF(filtered, filterLabel);
-      toast.success(`Exported ${filtered.length} monitor${filtered.length === 1 ? "" : "s"} to ${fmt.toUpperCase()}`);
+      toast.success(
+        `Exported ${filtered.length} monitor${filtered.length === 1 ? "" : "s"} to ${fmt.toUpperCase()}`,
+      );
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Export failed");
     }
@@ -189,9 +201,13 @@ function DashboardView() {
         <main className="mx-auto max-w-7xl px-4 py-6 md:px-6 md:py-10">
           <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4 sm:flex sm:flex-wrap sm:items-end sm:justify-between">
             <div className="min-w-0">
-              <h1 className="truncate text-xl font-semibold tracking-tight sm:text-2xl md:text-3xl">Monitors</h1>
+              <h1 className="truncate text-xl font-semibold tracking-tight sm:text-2xl md:text-3xl">
+                Monitors
+              </h1>
               <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
-                {monitors ? `${monitors.length} endpoint${monitors.length === 1 ? "" : "s"} tracked` : "Loading monitors…"}
+                {monitors
+                  ? `${monitors.length} endpoint${monitors.length === 1 ? "" : "s"} tracked`
+                  : "Loading monitors…"}
               </p>
             </div>
             <div className="flex shrink-0 items-center gap-2">
@@ -215,11 +231,19 @@ function DashboardView() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => doDashboardExport("csv")} className="gap-2">
-                    <FileText className="h-4 w-4" /> Export CSV ({filtered.length})
+                  <DropdownMenuItem
+                    onClick={() => doDashboardExport("csv")}
+                    className="gap-2"
+                  >
+                    <FileText className="h-4 w-4" /> Export CSV (
+                    {filtered.length})
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => doDashboardExport("pdf")} className="gap-2">
-                    <FileText className="h-4 w-4" /> Export PDF ({filtered.length})
+                  <DropdownMenuItem
+                    onClick={() => doDashboardExport("pdf")}
+                    className="gap-2"
+                  >
+                    <FileText className="h-4 w-4" /> Export PDF (
+                    {filtered.length})
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -233,20 +257,36 @@ function DashboardView() {
 
           {/* Mobile-only quick actions */}
           <div className="mt-3 flex gap-2 sm:hidden">
-            <Button variant="outline" size="sm" onClick={() => setAlertsOpen(true)} className="flex-1 gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setAlertsOpen(true)}
+              className="flex-1 gap-2"
+            >
               <BellRing className="h-3.5 w-3.5" /> Reports
             </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="flex-1 gap-2" disabled={!monitors || filtered.length === 0}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex-1 gap-2"
+                  disabled={!monitors || filtered.length === 0}
+                >
                   <Download className="h-3.5 w-3.5" /> Export
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => doDashboardExport("csv")} className="gap-2">
+                <DropdownMenuItem
+                  onClick={() => doDashboardExport("csv")}
+                  className="gap-2"
+                >
                   <FileText className="h-4 w-4" /> Export CSV
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => doDashboardExport("pdf")} className="gap-2">
+                <DropdownMenuItem
+                  onClick={() => doDashboardExport("pdf")}
+                  className="gap-2"
+                >
                   <FileText className="h-4 w-4" /> Export PDF
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -280,17 +320,41 @@ function DashboardView() {
                 onValueChange={(v) => v && setFilter(v as FilterKey)}
                 className="w-full overflow-x-auto rounded-md border border-border bg-card p-0.5 sm:w-auto"
               >
-                <ToggleGroupItem value="all" className="h-8 px-3 text-xs data-[state=on]:bg-primary/10 data-[state=on]:text-primary">
-                  All <span className="ml-1 text-muted-foreground">{counts.all}</span>
+                <ToggleGroupItem
+                  value="all"
+                  className="h-8 px-3 text-xs data-[state=on]:bg-primary/10 data-[state=on]:text-primary"
+                >
+                  All{" "}
+                  <span className="ml-1 text-muted-foreground">
+                    {counts.all}
+                  </span>
                 </ToggleGroupItem>
-                <ToggleGroupItem value="up" className="h-8 px-3 text-xs data-[state=on]:bg-[color:var(--success)]/15 data-[state=on]:text-[color:var(--success)]">
-                  Up <span className="ml-1 text-muted-foreground">{counts.up}</span>
+                <ToggleGroupItem
+                  value="up"
+                  className="h-8 px-3 text-xs data-[state=on]:bg-[color:var(--success)]/15 data-[state=on]:text-[color:var(--success)]"
+                >
+                  Up{" "}
+                  <span className="ml-1 text-muted-foreground">
+                    {counts.up}
+                  </span>
                 </ToggleGroupItem>
-                <ToggleGroupItem value="down" className="h-8 px-3 text-xs data-[state=on]:bg-destructive/15 data-[state=on]:text-destructive">
-                  Down <span className="ml-1 text-muted-foreground">{counts.down}</span>
+                <ToggleGroupItem
+                  value="down"
+                  className="h-8 px-3 text-xs data-[state=on]:bg-destructive/15 data-[state=on]:text-destructive"
+                >
+                  Down{" "}
+                  <span className="ml-1 text-muted-foreground">
+                    {counts.down}
+                  </span>
                 </ToggleGroupItem>
-                <ToggleGroupItem value="paused" className="h-8 px-3 text-xs data-[state=on]:bg-muted data-[state=on]:text-foreground">
-                  Paused <span className="ml-1 text-muted-foreground">{counts.paused}</span>
+                <ToggleGroupItem
+                  value="paused"
+                  className="h-8 px-3 text-xs data-[state=on]:bg-muted data-[state=on]:text-foreground"
+                >
+                  Paused{" "}
+                  <span className="ml-1 text-muted-foreground">
+                    {counts.paused}
+                  </span>
                 </ToggleGroupItem>
               </ToggleGroup>
             </div>
@@ -340,7 +404,12 @@ function DashboardView() {
                   <Trash2 className="h-3.5 w-3.5" /> Delete
                 </Button>
                 {selected.size > 0 && (
-                  <Button variant="ghost" size="sm" className="h-8" onClick={clearSelection}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8"
+                    onClick={clearSelection}
+                  >
                     Clear
                   </Button>
                 )}
@@ -355,7 +424,9 @@ function DashboardView() {
                 <AlertTriangle className="h-8 w-8 text-destructive" />
                 <div>
                   <div className="font-medium">Couldn't load monitors</div>
-                  <p className="text-sm text-muted-foreground">Check your connection and try again.</p>
+                  <p className="text-sm text-muted-foreground">
+                    Check your connection and try again.
+                  </p>
                 </div>
                 <Button onClick={refresh} variant="outline" className="gap-2">
                   <RefreshCw className="h-3.5 w-3.5" /> Retry
@@ -370,7 +441,8 @@ function DashboardView() {
                 <div>
                   <div className="text-base font-semibold">No monitors yet</div>
                   <p className="mt-1 max-w-sm text-sm text-muted-foreground">
-                    Add your first endpoint and Pulseboard will start checking it in the background.
+                    Add your first endpoint and Pulseboard will start checking
+                    it in the background.
                   </p>
                 </div>
                 <Button onClick={openCreate} className="mt-2 gap-2">
@@ -378,12 +450,19 @@ function DashboardView() {
                 </Button>
               </Card>
             )}
-            {!loading && !error && monitors && monitors.length > 0 && (
-              filtered.length === 0 ? (
+            {!loading &&
+              !error &&
+              monitors &&
+              monitors.length > 0 &&
+              (filtered.length === 0 ? (
                 <Card className="flex flex-col items-center gap-2 p-10 text-center">
                   <Search className="h-6 w-6 text-muted-foreground" />
-                  <div className="text-sm font-medium">No monitors match your filters</div>
-                  <p className="text-xs text-muted-foreground">Try clearing the search or switching to All.</p>
+                  <div className="text-sm font-medium">
+                    No monitors match your filters
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Try clearing the search or switching to All.
+                  </p>
                   <Button
                     variant="outline"
                     size="sm"
@@ -409,8 +488,7 @@ function DashboardView() {
                     />
                   ))}
                 </div>
-              )
-            )}
+              ))}
           </div>
         </main>
 
@@ -423,24 +501,38 @@ function DashboardView() {
 
         <AlertReportsModal open={alertsOpen} onOpenChange={setAlertsOpen} />
 
-        <AlertDialog open={!!toDelete} onOpenChange={(o) => !o && setToDelete(null)}>
+        <AlertDialog
+          open={!!toDelete}
+          onOpenChange={(o) => !o && setToDelete(null)}
+        >
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Delete monitor?</AlertDialogTitle>
               <AlertDialogDescription>
-                This will remove <span className="font-medium text-foreground">{toDelete?.name}</span> and its check history. This action can't be undone.
+                This will remove{" "}
+                <span className="font-medium text-foreground">
+                  {toDelete?.name}
+                </span>{" "}
+                and its check history. This action can't be undone.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={confirmDelete} disabled={deleting} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              <AlertDialogAction
+                onClick={confirmDelete}
+                disabled={deleting}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
                 {deleting ? "Deleting…" : "Delete"}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
 
-        <AlertDialog open={!!bulkAction} onOpenChange={(o) => !o && setBulkAction(null)}>
+        <AlertDialog
+          open={!!bulkAction}
+          onOpenChange={(o) => !o && setBulkAction(null)}
+        >
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>

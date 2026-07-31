@@ -22,7 +22,9 @@ vi.mock("sonner", () => ({
   toast: { success: vi.fn(), error: vi.fn() },
 }));
 
-function renderModal(props: Partial<Parameters<typeof AddEditMonitorModal>[0]> = {}) {
+function renderModal(
+  props: Partial<Parameters<typeof AddEditMonitorModal>[0]> = {},
+) {
   const defaultProps = {
     open: true,
     onOpenChange: vi.fn(),
@@ -47,7 +49,9 @@ describe("AddEditMonitorModal", () => {
 
     expect(screen.getByLabelText(/name/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/url/i)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /add monitor/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /add monitor/i }),
+    ).toBeInTheDocument();
   });
 
   it("shows validation error when name is empty", async () => {
@@ -90,7 +94,11 @@ describe("AddEditMonitorModal", () => {
   });
 
   it("calls monitorApi.create on valid submit", async () => {
-    mockCreate.mockResolvedValueOnce({ id: "new-1", name: "Test", status: "pending" });
+    mockCreate.mockResolvedValueOnce({
+      id: "new-1",
+      name: "Test",
+      status: "pending",
+    });
     const onSuccess = vi.fn();
     const onOpenChange = vi.fn();
     renderModal({ onSuccess, onOpenChange });

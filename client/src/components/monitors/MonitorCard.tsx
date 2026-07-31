@@ -3,7 +3,11 @@ import { ExternalLink, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { StatusBadge } from "./StatusBadge";
 import type { Monitor } from "@/api/monitorApi";
 import { formatRelativeTime } from "@/lib/format";
@@ -17,7 +21,13 @@ interface Props {
   onToggleSelect?: (m: Monitor) => void;
 }
 
-export function MonitorCard({ monitor, onEdit, onDelete, selected = false, onToggleSelect }: Props) {
+export function MonitorCard({
+  monitor,
+  onEdit,
+  onDelete,
+  selected = false,
+  onToggleSelect,
+}: Props) {
   return (
     <Card
       className={cn(
@@ -57,7 +67,9 @@ export function MonitorCard({ monitor, onEdit, onDelete, selected = false, onTog
                   </a>
                 </div>
               </TooltipTrigger>
-              <TooltipContent className="font-mono text-xs">{monitor.url}</TooltipContent>
+              <TooltipContent className="font-mono text-xs">
+                {monitor.url}
+              </TooltipContent>
             </Tooltip>
           </div>
         </div>
@@ -68,29 +80,49 @@ export function MonitorCard({ monitor, onEdit, onDelete, selected = false, onTog
         <div>
           <div className="text-muted-foreground">Uptime (24h)</div>
           <div className="mt-0.5 font-mono text-sm text-foreground">
-            {monitor.uptimePercent24h != null ? `${monitor.uptimePercent24h.toFixed(2)}%` : "—"}
+            {monitor.uptimePercent24h != null
+              ? `${monitor.uptimePercent24h.toFixed(2)}%`
+              : "—"}
           </div>
         </div>
         <div>
           <div className="text-muted-foreground">Last checked</div>
           <div className="mt-0.5 font-mono text-sm text-foreground">
-            {monitor.lastCheckedAt ? formatRelativeTime(monitor.lastCheckedAt) : "—"}
+            {monitor.lastCheckedAt
+              ? formatRelativeTime(monitor.lastCheckedAt)
+              : "—"}
           </div>
         </div>
       </div>
 
       <div className="flex items-center justify-between gap-2 border-t border-border/60 pt-4">
         <div className="flex min-w-0 items-center gap-1.5 text-[11px] text-muted-foreground">
-          <span className="rounded-md bg-muted px-1.5 py-0.5 font-mono">every {monitor.intervalMinutes}m</span>
+          <span className="rounded-md bg-muted px-1.5 py-0.5 font-mono">
+            every {monitor.intervalMinutes}m
+          </span>
           {!monitor.isActive && (
-            <span className="rounded-md bg-[color:var(--warning)]/15 px-1.5 py-0.5 font-medium text-[color:var(--warning)]">Paused</span>
+            <span className="rounded-md bg-[color:var(--warning)]/15 px-1.5 py-0.5 font-medium text-[color:var(--warning)]">
+              Paused
+            </span>
           )}
         </div>
         <div className="flex shrink-0 items-center gap-1">
-          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onEdit(monitor)} aria-label="Edit monitor">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            onClick={() => onEdit(monitor)}
+            aria-label="Edit monitor"
+          >
             <Pencil className="h-3.5 w-3.5" />
           </Button>
-          <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive" onClick={() => onDelete(monitor)} aria-label="Delete monitor">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-muted-foreground hover:text-destructive"
+            onClick={() => onDelete(monitor)}
+            aria-label="Delete monitor"
+          >
             <Trash2 className="h-3.5 w-3.5" />
           </Button>
         </div>

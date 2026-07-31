@@ -3,7 +3,12 @@ import autoTable from "jspdf-autotable";
 import type { Check, MonitorDetail } from "@/api/monitorApi";
 
 function safeName(name: string) {
-  return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") || "monitor";
+  return (
+    name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "") || "monitor"
+  );
 }
 
 function violation(check: Check, monitor: MonitorDetail): string {
@@ -60,8 +65,16 @@ export function exportChecksToPDF(monitor: MonitorDetail) {
     pageWidth / 2,
     76,
   );
-  doc.text(`Latency threshold: ${monitor.latencyThresholdMs}ms`, pageWidth / 2, 92);
-  doc.text(`Downtime threshold: ${monitor.downtimeThresholdMinutes} min`, pageWidth / 2, 108);
+  doc.text(
+    `Latency threshold: ${monitor.latencyThresholdMs}ms`,
+    pageWidth / 2,
+    92,
+  );
+  doc.text(
+    `Downtime threshold: ${monitor.downtimeThresholdMinutes} min`,
+    pageWidth / 2,
+    108,
+  );
   doc.text(`Generated: ${new Date().toLocaleString()}`, 40, 124);
 
   autoTable(doc, {

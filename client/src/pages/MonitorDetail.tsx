@@ -1,6 +1,16 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { AlertTriangle, ArrowLeft, Clock, Download, ExternalLink, FileText, Pencil, RefreshCw, Trash2 } from "lucide-react";
+import {
+  AlertTriangle,
+  ArrowLeft,
+  Clock,
+  Download,
+  ExternalLink,
+  FileText,
+  Pencil,
+  RefreshCw,
+  Trash2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -28,7 +38,10 @@ import { StatusBadge } from "@/components/monitors/StatusBadge";
 import { ResponseTimeChart } from "@/components/monitors/ResponseTimeChart";
 import { RecentChecksTable } from "@/components/monitors/RecentChecksTable";
 import { AddEditMonitorModal } from "@/components/monitors/AddEditMonitorModal";
-import { monitorApi, type MonitorDetail as MonitorDetailType } from "@/api/monitorApi";
+import {
+  monitorApi,
+  type MonitorDetail as MonitorDetailType,
+} from "@/api/monitorApi";
 import { formatRelativeTime } from "@/lib/format";
 import { exportChecksToCSV, exportChecksToPDF } from "@/lib/exportChecks";
 
@@ -92,7 +105,10 @@ function MonitorDetailView() {
 
   const avgResponseTime =
     data && data.checks.length > 0
-      ? Math.round(data.checks.reduce((s, c) => s + c.responseTimeMs, 0) / data.checks.length)
+      ? Math.round(
+          data.checks.reduce((s, c) => s + c.responseTimeMs, 0) /
+            data.checks.length,
+        )
       : null;
 
   const violations = data
@@ -116,7 +132,10 @@ function MonitorDetailView() {
     <div className="min-h-screen bg-background text-foreground">
       <Navbar />
       <main className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-10">
-        <Link to="/dashboard" className="mb-4 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+        <Link
+          to="/dashboard"
+          className="mb-4 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
+        >
           <ArrowLeft className="h-3.5 w-3.5" /> Back to monitors
         </Link>
 
@@ -138,7 +157,9 @@ function MonitorDetailView() {
             <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:flex-wrap">
               <div className="min-w-0 max-w-full">
                 <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-                  <h1 className="min-w-0 break-words text-xl font-semibold tracking-tight sm:text-2xl md:text-3xl">{data.name}</h1>
+                  <h1 className="min-w-0 break-words text-xl font-semibold tracking-tight sm:text-2xl md:text-3xl">
+                    {data.name}
+                  </h1>
                   <StatusBadge status={data.status} />
                 </div>
                 <a
@@ -154,20 +175,36 @@ function MonitorDetailView() {
               <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm" className="gap-2" disabled={data.checks.length === 0}>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="gap-2"
+                      disabled={data.checks.length === 0}
+                    >
                       <Download className="h-3.5 w-3.5" /> Export
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => doExport("csv")} className="gap-2">
+                    <DropdownMenuItem
+                      onClick={() => doExport("csv")}
+                      className="gap-2"
+                    >
                       <FileText className="h-4 w-4" /> Export CSV
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => doExport("pdf")} className="gap-2">
+                    <DropdownMenuItem
+                      onClick={() => doExport("pdf")}
+                      className="gap-2"
+                    >
                       <FileText className="h-4 w-4" /> Export PDF
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-                <Button variant="outline" size="sm" onClick={() => setEditOpen(true)} className="gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setEditOpen(true)}
+                  className="gap-2"
+                >
                   <Pencil className="h-3.5 w-3.5" /> Edit
                 </Button>
                 <Button
@@ -182,27 +219,53 @@ function MonitorDetailView() {
             </div>
 
             <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
-              <StatCard label="Uptime (24h)" value={data.uptimePercent24h != null ? `${data.uptimePercent24h.toFixed(2)}%` : "—"} />
-              <StatCard label="Avg response" value={avgResponseTime != null ? `${avgResponseTime}ms` : "—"} />
+              <StatCard
+                label="Uptime (24h)"
+                value={
+                  data.uptimePercent24h != null
+                    ? `${data.uptimePercent24h.toFixed(2)}%`
+                    : "—"
+                }
+              />
+              <StatCard
+                label="Avg response"
+                value={avgResponseTime != null ? `${avgResponseTime}ms` : "—"}
+              />
               <StatCard
                 label="Threshold violations"
                 value={String(violations)}
                 tone={violations > 0 ? "warning" : "default"}
               />
-              <StatCard label="Last checked" value={data.lastCheckedAt ? formatRelativeTime(data.lastCheckedAt) : "—"} />
+              <StatCard
+                label="Last checked"
+                value={
+                  data.lastCheckedAt
+                    ? formatRelativeTime(data.lastCheckedAt)
+                    : "—"
+                }
+              />
             </div>
 
             <Card className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2 p-4 text-xs">
               <div>
-                <span className="text-muted-foreground">Latency threshold: </span>
-                <span className="font-mono font-semibold">{data.latencyThresholdMs}ms</span>
+                <span className="text-muted-foreground">
+                  Latency threshold:{" "}
+                </span>
+                <span className="font-mono font-semibold">
+                  {data.latencyThresholdMs}ms
+                </span>
               </div>
               <div>
-                <span className="text-muted-foreground">Downtime threshold: </span>
-                <span className="font-mono font-semibold">{data.downtimeThresholdMinutes} min</span>
+                <span className="text-muted-foreground">
+                  Downtime threshold:{" "}
+                </span>
+                <span className="font-mono font-semibold">
+                  {data.downtimeThresholdMinutes} min
+                </span>
               </div>
               <div className="text-muted-foreground">
-                Checks above the latency threshold or with a down status are highlighted as violations.
+                Checks above the latency threshold or with a down status are
+                highlighted as violations.
               </div>
             </Card>
 
@@ -210,7 +273,9 @@ function MonitorDetailView() {
               <div className="mb-4 flex items-center justify-between">
                 <div>
                   <div className="text-sm font-semibold">Response time</div>
-                  <div className="text-xs text-muted-foreground">Recent checks · red dots indicate downtime</div>
+                  <div className="text-xs text-muted-foreground">
+                    Recent checks · red dots indicate downtime
+                  </div>
                 </div>
               </div>
               {data.checks.length === 0 ? (
@@ -224,21 +289,29 @@ function MonitorDetailView() {
               <div className="flex items-center justify-between p-5">
                 <div>
                   <div className="text-sm font-semibold">Recent checks</div>
-                  <div className="text-xs text-muted-foreground">Latest activity from the checker</div>
+                  <div className="text-xs text-muted-foreground">
+                    Latest activity from the checker
+                  </div>
                 </div>
               </div>
               <Separator />
               {data.checks.length === 0 ? (
-                <div className="p-6"><EmptyChecks /></div>
+                <div className="p-6">
+                  <EmptyChecks />
+                </div>
               ) : (
                 <>
-              <RecentChecksTable
-                checks={[...data.checks].reverse().slice(0, visibleCount)}
-                latencyThresholdMs={data.latencyThresholdMs}
-              />
+                  <RecentChecksTable
+                    checks={[...data.checks].reverse().slice(0, visibleCount)}
+                    latencyThresholdMs={data.latencyThresholdMs}
+                  />
                   {visibleCount < data.checks.length && (
                     <div className="flex justify-center border-t border-border p-3">
-                      <Button variant="ghost" size="sm" onClick={() => setVisibleCount((c) => c + 20)}>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setVisibleCount((c) => c + 20)}
+                      >
                         Load more
                       </Button>
                     </div>
@@ -250,19 +323,30 @@ function MonitorDetailView() {
         )}
       </main>
 
-      <AddEditMonitorModal open={editOpen} onOpenChange={setEditOpen} monitor={data} onSuccess={load} />
+      <AddEditMonitorModal
+        open={editOpen}
+        onOpenChange={setEditOpen}
+        monitor={data}
+        onSuccess={load}
+      />
 
       <AlertDialog open={confirmDelete} onOpenChange={setConfirmDelete}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Delete monitor?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will remove <span className="font-medium text-foreground">{data?.name}</span> and its check history. This action can't be undone.
+              This will remove{" "}
+              <span className="font-medium text-foreground">{data?.name}</span>{" "}
+              and its check history. This action can't be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={doDelete} disabled={deleting} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+            <AlertDialogAction
+              onClick={doDelete}
+              disabled={deleting}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
               {deleting ? "Deleting…" : "Delete"}
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -272,7 +356,15 @@ function MonitorDetailView() {
   );
 }
 
-function StatCard({ label, value, tone = "default" }: { label: string; value: string; tone?: "default" | "warning" }) {
+function StatCard({
+  label,
+  value,
+  tone = "default",
+}: {
+  label: string;
+  value: string;
+  tone?: "default" | "warning";
+}) {
   return (
     <Card className="p-4">
       <div className="text-xs text-muted-foreground">{label}</div>
@@ -296,7 +388,8 @@ function EmptyChecks() {
       </div>
       <div className="text-sm font-medium">No checks yet</div>
       <p className="max-w-sm text-xs text-muted-foreground">
-        The first check will run within a few minutes. Data will appear here automatically.
+        The first check will run within a few minutes. Data will appear here
+        automatically.
       </p>
     </div>
   );

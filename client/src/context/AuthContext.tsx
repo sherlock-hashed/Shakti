@@ -1,4 +1,12 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 import { axiosInstance, setAuthToken } from "@/api/axiosInstance";
 
 export interface User {
@@ -21,7 +29,9 @@ const AuthContext = createContext<AuthState | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(() => localStorage.getItem("pb_token"));
+  const [token, setToken] = useState<string | null>(() =>
+    localStorage.getItem("pb_token"),
+  );
   const [loading, setLoading] = useState(!!localStorage.getItem("pb_token"));
 
   // On mount: if we have a saved token, validate it and fetch user
@@ -56,14 +66,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setAuthToken(newToken);
   }, []);
 
-  const register = useCallback(async (name: string, email: string, password: string) => {
-    const res = await axiosInstance.post("/auth/register", { name, email, password });
-    const { token: newToken, user: newUser } = res.data;
-    localStorage.setItem("pb_token", newToken);
-    setToken(newToken);
-    setUser(newUser);
-    setAuthToken(newToken);
-  }, []);
+  const register = useCallback(
+    async (name: string, email: string, password: string) => {
+      const res = await axiosInstance.post("/auth/register", {
+        name,
+        email,
+        password,
+      });
+      const { token: newToken, user: newUser } = res.data;
+      localStorage.setItem("pb_token", newToken);
+      setToken(newToken);
+      setUser(newUser);
+      setAuthToken(newToken);
+    },
+    [],
+  );
 
   const logout = useCallback(() => {
     localStorage.removeItem("pb_token");
@@ -73,7 +90,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const value = useMemo<AuthState>(
-    () => ({ user, token, isAuthenticated: !!token && !!user, loading, login, register, logout }),
+    () => ({
+      user,
+      token,
+      isAuthenticated: !!token && !!user,
+      loading,
+      login,
+      register,
+      logout,
+    }),
     [user, token, loading, login, register, logout],
   );
 

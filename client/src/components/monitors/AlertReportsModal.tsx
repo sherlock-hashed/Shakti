@@ -96,24 +96,42 @@ export function AlertReportsModal({ open, onOpenChange }: Props) {
             Scheduled alert reports
           </DialogTitle>
           <DialogDescription>
-            Get an email or PDF summary whenever monitors violate latency or downtime thresholds.
+            Get an email or PDF summary whenever monitors violate latency or
+            downtime thresholds.
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-5 py-2">
           <div className="flex items-center justify-between rounded-md border border-border bg-muted/30 px-3 py-2.5">
             <div className="flex items-center gap-2">
-              <CheckCircle2 className={"h-4 w-4 " + (cfg.enabled ? "text-[color:var(--success)]" : "text-muted-foreground")} />
+              <CheckCircle2
+                className={
+                  "h-4 w-4 " +
+                  (cfg.enabled
+                    ? "text-[color:var(--success)]"
+                    : "text-muted-foreground")
+                }
+              />
               <div>
-                <div className="text-sm font-medium">Enable scheduled reports</div>
-                <div className="text-xs text-muted-foreground">Runs automatically in the background</div>
+                <div className="text-sm font-medium">
+                  Enable scheduled reports
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  Runs automatically in the background
+                </div>
               </div>
             </div>
-            <Switch checked={cfg.enabled} onCheckedChange={(v) => setCfg((c) => ({ ...c, enabled: v }))} />
+            <Switch
+              checked={cfg.enabled}
+              onCheckedChange={(v) => setCfg((c) => ({ ...c, enabled: v }))}
+            />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="report-email" className="flex items-center gap-1.5 text-xs">
+            <Label
+              htmlFor="report-email"
+              className="flex items-center gap-1.5 text-xs"
+            >
               <Mail className="h-3.5 w-3.5" /> Deliver to
             </Label>
             <Input
@@ -133,7 +151,9 @@ export function AlertReportsModal({ open, onOpenChange }: Props) {
               </Label>
               <Select
                 value={cfg.frequency}
-                onValueChange={(v) => setCfg((c) => ({ ...c, frequency: v as ReportFrequency }))}
+                onValueChange={(v) =>
+                  setCfg((c) => ({ ...c, frequency: v as ReportFrequency }))
+                }
                 disabled={!cfg.enabled}
               >
                 <SelectTrigger>
@@ -152,7 +172,9 @@ export function AlertReportsModal({ open, onOpenChange }: Props) {
               </Label>
               <Select
                 value={cfg.format}
-                onValueChange={(v) => setCfg((c) => ({ ...c, format: v as ReportFormat }))}
+                onValueChange={(v) =>
+                  setCfg((c) => ({ ...c, format: v as ReportFormat }))
+                }
                 disabled={!cfg.enabled}
               >
                 <SelectTrigger>
@@ -168,12 +190,16 @@ export function AlertReportsModal({ open, onOpenChange }: Props) {
           </div>
 
           <div className="space-y-2 rounded-md border border-border p-3">
-            <div className="text-xs font-medium text-muted-foreground">Trigger conditions</div>
+            <div className="text-xs font-medium text-muted-foreground">
+              Trigger conditions
+            </div>
             <label className="flex items-center justify-between text-sm">
               <span>Only when thresholds are violated</span>
               <Switch
                 checked={cfg.onlyViolations}
-                onCheckedChange={(v) => setCfg((c) => ({ ...c, onlyViolations: v }))}
+                onCheckedChange={(v) =>
+                  setCfg((c) => ({ ...c, onlyViolations: v }))
+                }
                 disabled={!cfg.enabled}
               />
             </label>
@@ -181,7 +207,9 @@ export function AlertReportsModal({ open, onOpenChange }: Props) {
               <span>Latency threshold breaches</span>
               <Switch
                 checked={cfg.latencyOnly}
-                onCheckedChange={(v) => setCfg((c) => ({ ...c, latencyOnly: v }))}
+                onCheckedChange={(v) =>
+                  setCfg((c) => ({ ...c, latencyOnly: v }))
+                }
                 disabled={!cfg.enabled}
               />
             </label>
@@ -189,7 +217,9 @@ export function AlertReportsModal({ open, onOpenChange }: Props) {
               <span>Downtime threshold breaches</span>
               <Switch
                 checked={cfg.downtimeOnly}
-                onCheckedChange={(v) => setCfg((c) => ({ ...c, downtimeOnly: v }))}
+                onCheckedChange={(v) =>
+                  setCfg((c) => ({ ...c, downtimeOnly: v }))
+                }
                 disabled={!cfg.enabled}
               />
             </label>

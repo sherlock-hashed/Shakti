@@ -59,7 +59,9 @@ export function Navbar() {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-9 gap-2 rounded-full px-2">
                 <Avatar className="h-7 w-7">
-                  <AvatarFallback className="bg-primary/10 text-xs text-primary">{initials}</AvatarFallback>
+                  <AvatarFallback className="bg-primary/10 text-xs text-primary">
+                    {initials}
+                  </AvatarFallback>
                 </Avatar>
                 <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
               </Button>
@@ -68,7 +70,9 @@ export function Navbar() {
               <DropdownMenuLabel>
                 <div className="flex flex-col">
                   <span className="text-sm font-medium">{user?.name}</span>
-                  <span className="text-xs font-normal text-muted-foreground">{user?.email}</span>
+                  <span className="text-xs font-normal text-muted-foreground">
+                    {user?.email}
+                  </span>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />

@@ -8,7 +8,8 @@ class ResizeObserverStub {
   unobserve() {}
   disconnect() {}
 }
-globalThis.ResizeObserver = ResizeObserverStub as unknown as typeof ResizeObserver;
+globalThis.ResizeObserver =
+  ResizeObserverStub as unknown as typeof ResizeObserver;
 
 // Radix Dialog uses pointer-capture APIs
 if (!HTMLElement.prototype.hasPointerCapture) {

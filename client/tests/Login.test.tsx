@@ -18,7 +18,9 @@ const mockUseAuth = vi.fn(() => ({
 
 vi.mock("@/context/AuthContext", () => ({
   useAuth: () => mockUseAuth(),
-  AuthProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  AuthProvider: ({ children }: { children: React.ReactNode }) => (
+    <>{children}</>
+  ),
 }));
 
 // ─── Mock sonner toast ───
@@ -89,7 +91,9 @@ describe("Login Page", () => {
     await user.click(screen.getByRole("button", { name: /log in/i }));
 
     await waitFor(() => {
-      expect(screen.getByText(/invalid email or password/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/invalid email or password/i),
+      ).toBeInTheDocument();
     });
   });
 });
