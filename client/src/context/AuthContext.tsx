@@ -7,7 +7,11 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { axiosInstance, setAuthToken } from "@/api/axiosInstance";
+import {
+  axiosInstance,
+  setAuthToken,
+  setUnauthorizedHandler,
+} from "@/api/axiosInstance";
 
 export interface User {
   id: string;
