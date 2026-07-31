@@ -8,7 +8,22 @@ const app = express();
 // --------------- Middleware ---------------
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps, curl, or server-to-server)
+      if (!origin) return callback(null, true);
+      const allowedOrigins = [
+        "http://localhost:5173",
+        "http://localhost:3000",
+        "http://localhost:4173",
+        "http://127.0.0.1:5173",
+        "http://127.0.0.1:3000",
+        process.env.CLIENT_URL,
+      ].filter(Boolean);
+      if (allowedOrigins.includes(origin) || process.env.NODE_ENV !== "production") {
+        return callback(null, true);
+      }
+      return callback(null, true);
+    },
     credentials: true,
   })
 );
