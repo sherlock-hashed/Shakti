@@ -34,8 +34,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
   const [loading, setLoading] = useState(!!localStorage.getItem("pb_token"));
 
+  const logout = useCallback(() => {
+    localStorage.removeItem("pb_token");
+    setAuthToken(null);
+    setToken(null);
+    setUser(null);
+  }, []);
+
   // On mount: if we have a saved token, validate it and fetch user
   useEffect(() => {
+    setUnauthorizedHandler(logout);
     const savedToken = localStorage.getItem("pb_token");
     if (!savedToken) {
       setLoading(false);
@@ -55,15 +63,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setToken(null);
       })
       .finally(() => setLoading(false));
-  }, []);
+  }, [logout]);
 
   const login = useCallback(async (email: string, password: string) => {
     const res = await axiosInstance.post("/auth/login", { email, password });
     const { token: newToken, user: newUser } = res.data;
+    setAuthToken(newToken);
     localStorage.setItem("pb_token", newToken);
     setToken(newToken);
     setUser(newUser);
-    setAuthToken(newToken);
   }, []);
 
   const register = useCallback(
@@ -74,20 +82,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         password,
       });
       const { token: newToken, user: newUser } = res.data;
+      setAuthToken(newToken);
       localStorage.setItem("pb_token", newToken);
       setToken(newToken);
       setUser(newUser);
-      setAuthToken(newToken);
     },
     [],
   );
-
-  const logout = useCallback(() => {
-    localStorage.removeItem("pb_token");
-    setToken(null);
-    setUser(null);
-    setAuthToken(null);
-  }, []);
 
   const value = useMemo<AuthState>(
     () => ({
