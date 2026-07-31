@@ -1,0 +1,102 @@
+name: CI — Lint, Test & Docker Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ────────────────────────────────────────────────
+  # 1. Lint & Type-check the frontend
+  # ────────────────────────────────────────────────
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: client/package-lock.json
+
+      - name: Install client dependencies
+        working-directory: client
+        run: npm ci
+
+      - name: Run ESLint
+        working-directory: client
+        run: npm run lint
+
+  # ────────────────────────────────────────────────
+  # 2. Backend tests (Jest + mongodb-memory-server)
+  # ────────────────────────────────────────────────
+  backend-tests:
+    name: Backend Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: server/package-lock.json
+
+      - name: Install server dependencies
+        working-directory: server
+        run: npm ci
+
+      - name: Run backend tests
+        working-directory: server
+        run: npm test
+
+  # ────────────────────────────────────────────────
+  # 3. Frontend tests (Vitest + testing-library)
+  # ────────────────────────────────────────────────
+  frontend-tests:
+    name: Frontend Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: client/package-lock.json
+
+      - name: Install client dependencies
+        working-directory: client
+        run: npm ci
+
+      - name: Run frontend tests
+        working-directory: client
+        run: npm test
+
+  # ────────────────────────────────────────────────
+  # 4. Docker build verification
+  # ────────────────────────────────────────────────
+  docker-build:
+    name: Docker Build
+    runs-on: ubuntu-latest
+    needs: [lint, backend-tests, frontend-tests]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build server image
+        run: docker build -t pulseboard-server:ci ./server
+
+      - name: Build client image
+        run: docker build -t pulseboard-client:ci ./client
+
+      - name: Verify server image exists
+        run: docker image inspect pulseboard-server:ci > /dev/null
+
+      - name: Verify client image exists
+        run: docker image inspect pulseboard-client:ci > /dev/null
