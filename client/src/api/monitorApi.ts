@@ -1,6 +1,6 @@
 import { axiosInstance } from "./axiosInstance";
 
-// ─── Types (re-exported from mockData for backward compat) ───
+// ─── Interfaces & Types ───
 export interface Monitor {
   id: string;
   name: string;
