@@ -83,10 +83,18 @@ async function processWithConcurrency(monitors) {
  * Start the node-cron health check scheduler.
  * Runs every minute to find active monitors due for a check.
  */
+let isRunning = false;
+
 export function startScheduler() {
   console.log("⏱️  Cron scheduler initialized (runs every 1 minute)");
 
   const task = cron.schedule("* * * * *", async () => {
+    if (isRunning) {
+      console.log("[CronScheduler] Sweep already in progress, skipping interval.");
+      return;
+    }
+
+    isRunning = true;
     try {
       const now = new Date();
 
@@ -132,6 +140,8 @@ export function startScheduler() {
       );
     } catch (error) {
       console.error("[CronScheduler] Sweep error:", error.message);
+    } finally {
+      isRunning = false;
     }
   });
 
