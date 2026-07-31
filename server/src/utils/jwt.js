@@ -6,9 +6,12 @@ import jwt from "jsonwebtoken";
  * @returns {string} Signed JWT string.
  */
 export function generateToken(userId) {
-  return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN || "1h",
-  });
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error("JWT_SECRET environment variable is missing");
+  }
+  const expiresIn = process.env.JWT_EXPIRES_IN || "7d";
+  return jwt.sign({ id: userId.toString() }, secret, { expiresIn });
 }
 
 /**
@@ -17,5 +20,9 @@ export function generateToken(userId) {
  * @returns {{ id: string }} Decoded payload.
  */
 export function verifyToken(token) {
-  return jwt.verify(token, process.env.JWT_SECRET);
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error("JWT_SECRET environment variable is missing");
+  }
+  return jwt.verify(token, secret);
 }
