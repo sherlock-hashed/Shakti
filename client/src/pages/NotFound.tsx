@@ -1,6 +1,10 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 export function NotFound() {
+  useEffect(() => {
+    document.title = "Pulseboard — Real-time API health monitoring";
+  }, []);
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">

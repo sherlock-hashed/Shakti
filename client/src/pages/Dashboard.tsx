@@ -50,7 +50,7 @@ type FilterKey = "all" | "up" | "down" | "paused";
 
 export function Dashboard() {
   useEffect(() => {
-    document.title = "Dashboard — Pulseboard";
+    document.title = "Pulseboard — Real-time API health monitoring";
   }, []);
 
   return (

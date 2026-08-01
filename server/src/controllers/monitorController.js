@@ -113,10 +113,21 @@ export async function createMonitor(req, res, next) {
       return res.status(400).json({ message: "Name and URL are required" });
     }
 
+    // Check for duplicate monitor URL for the same user
+    const existingUrl = await Monitor.findOne({
+      user: req.user._id,
+      url: url.trim(),
+    });
+    if (existingUrl) {
+      return res
+        .status(409)
+        .json({ message: "You already have a monitor tracking this URL" });
+    }
+
     const doc = await Monitor.create({
       user: req.user._id,
-      name,
-      url,
+      name: name.trim(),
+      url: url.trim(),
       expectedStatusCode,
       intervalMinutes,
       isActive,
@@ -157,7 +168,20 @@ export async function updateMonitor(req, res, next) {
     const updates = {};
     for (const key of allowedFields) {
       if (req.body[key] !== undefined) {
-        updates[key] = req.body[key];
+        updates[key] = typeof req.body[key] === "string" ? req.body[key].trim() : req.body[key];
+      }
+    }
+
+    if (updates.url) {
+      const existingUrl = await Monitor.findOne({
+        _id: { $ne: req.params.id },
+        user: req.user._id,
+        url: updates.url,
+      });
+      if (existingUrl) {
+        return res
+          .status(409)
+          .json({ message: "You already have a monitor tracking this URL" });
       }
     }
 

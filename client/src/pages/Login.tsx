@@ -17,7 +17,7 @@ export function Login() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    document.title = "Log in — Pulseboard";
+    document.title = "Pulseboard — Real-time API health monitoring";
   }, []);
 
   useEffect(() => {
@@ -33,10 +33,18 @@ export function Login() {
       toast.success("Welcome back");
       navigate("/");
     } catch (err) {
-      const msg = axios.isAxiosError(err)
-        ? err.response?.data?.message || "Invalid email or password"
-        : "Invalid email or password";
+      let msg = "Invalid email or password";
+      if (axios.isAxiosError(err)) {
+        if (!err.response || err.code === "ERR_NETWORK") {
+          msg = "Unable to connect to server. Please check your internet connection.";
+        } else if (err.response.status === 401) {
+          msg = "Invalid email or password. Please check your credentials.";
+        } else {
+          msg = err.response.data?.message || "Log in failed. Please try again.";
+        }
+      }
       setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }

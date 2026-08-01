@@ -46,10 +46,6 @@ import { formatRelativeTime } from "@/lib/format";
 import { exportChecksToCSV, exportChecksToPDF } from "@/lib/exportChecks";
 
 export function MonitorDetail() {
-  useEffect(() => {
-    document.title = "Monitor — Pulseboard";
-  }, []);
-
   return (
     <ProtectedRoute>
       <MonitorDetailView />
@@ -67,6 +63,10 @@ function MonitorDetailView() {
   const [editOpen, setEditOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
+
+  useEffect(() => {
+    document.title = "Pulseboard — Real-time API health monitoring";
+  }, []);
 
   const load = async () => {
     if (!id) return;

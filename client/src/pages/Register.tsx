@@ -22,7 +22,7 @@ export function Register() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    document.title = "Sign up — Pulseboard";
+    document.title = "Pulseboard — Real-time API health monitoring";
   }, []);
 
   useEffect(() => {
@@ -44,10 +44,18 @@ export function Register() {
       toast.success("Account created");
       navigate("/");
     } catch (err) {
-      const msg = axios.isAxiosError(err)
-        ? err.response?.data?.message || "Could not create account"
-        : "Could not create account";
+      let msg = "Could not create account";
+      if (axios.isAxiosError(err)) {
+        if (!err.response || err.code === "ERR_NETWORK") {
+          msg = "Unable to connect to server. Please check your internet connection.";
+        } else if (err.response.status === 409) {
+          msg = "An account with this email address already exists. Please log in.";
+        } else {
+          msg = err.response.data?.message || "Account creation failed. Please try again.";
+        }
+      }
       setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
