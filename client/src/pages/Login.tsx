@@ -21,7 +21,7 @@ export function Login() {
   }, []);
 
   useEffect(() => {
-    if (isAuthenticated) navigate("/dashboard");
+    if (isAuthenticated) navigate("/");
   }, [isAuthenticated, navigate]);
 
   const submit = async (e: React.FormEvent) => {
@@ -31,7 +31,7 @@ export function Login() {
     try {
       await login(email, password);
       toast.success("Welcome back");
-      navigate("/dashboard");
+      navigate("/");
     } catch (err) {
       const msg = axios.isAxiosError(err)
         ? err.response?.data?.message || "Invalid email or password"

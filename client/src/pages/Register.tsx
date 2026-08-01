@@ -26,7 +26,7 @@ export function Register() {
   }, []);
 
   useEffect(() => {
-    if (isAuthenticated) navigate("/dashboard");
+    if (isAuthenticated) navigate("/");
   }, [isAuthenticated, navigate]);
 
   const submit = async (e: React.FormEvent) => {
@@ -42,7 +42,7 @@ export function Register() {
     try {
       await register(form.name, form.email, form.password);
       toast.success("Account created");
-      navigate("/dashboard");
+      navigate("/");
     } catch (err) {
       const msg = axios.isAxiosError(err)
         ? err.response?.data?.message || "Could not create account"

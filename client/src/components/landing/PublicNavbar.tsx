@@ -1,7 +1,22 @@
 import { Link } from "react-router-dom";
-import { Activity, Menu } from "lucide-react";
+import {
+  Activity,
+  ChevronDown,
+  LogOut,
+  Menu,
+  LayoutDashboard,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Sheet,
   SheetContent,
@@ -10,16 +25,26 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { useAuth } from "@/context/AuthContext";
 import { cn } from "@/lib/utils";
 
 export function PublicNavbar() {
+  const { user, isAuthenticated, logout } = useAuth();
   const [scrolled, setScrolled] = useState(false);
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  const initials = (user?.name || user?.email || "U")
+    .split(/[\s@]/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((s) => s[0]?.toUpperCase())
+    .join("");
 
   return (
     <header
@@ -59,12 +84,62 @@ export function PublicNavbar() {
         </nav>
         <div className="hidden items-center gap-2 md:flex">
           <ThemeToggle />
-          <Button variant="ghost" size="sm" asChild>
-            <Link to="/login">Log in</Link>
-          </Button>
-          <Button size="sm" asChild>
-            <Link to="/register">Get started</Link>
-          </Button>
+          {isAuthenticated ? (
+            <>
+              <Button size="sm" asChild className="gap-2">
+                <Link to="/dashboard">
+                  <LayoutDashboard className="h-4 w-4" /> Go to Dashboard
+                </Link>
+              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className="h-9 gap-2 rounded-full px-2"
+                  >
+                    <Avatar className="h-7 w-7">
+                      <AvatarFallback className="bg-primary/10 text-xs text-primary">
+                        {initials}
+                      </AvatarFallback>
+                    </Avatar>
+                    <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuLabel>
+                    <div className="flex flex-col">
+                      <span className="text-sm font-medium">{user?.name}</span>
+                      <span className="text-xs font-normal text-muted-foreground">
+                        {user?.email}
+                      </span>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/dashboard" className="gap-2 cursor-pointer">
+                      <LayoutDashboard className="h-4 w-4" /> Dashboard
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={logout}
+                    className="gap-2 text-destructive focus:text-destructive cursor-pointer"
+                  >
+                    <LogOut className="h-4 w-4" /> Log out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </>
+          ) : (
+            <>
+              <Button variant="ghost" size="sm" asChild>
+                <Link to="/login">Log in</Link>
+              </Button>
+              <Button size="sm" asChild>
+                <Link to="/register">Get started</Link>
+              </Button>
+            </>
+          )}
         </div>
         <div className="flex items-center gap-1 md:hidden">
           <ThemeToggle />
@@ -98,12 +173,32 @@ export function PublicNavbar() {
                   Why us
                 </a>
                 <div className="mt-4 flex flex-col gap-2">
-                  <Button variant="outline" asChild>
-                    <Link to="/login">Log in</Link>
-                  </Button>
-                  <Button asChild>
-                    <Link to="/register">Get started</Link>
-                  </Button>
+                  {isAuthenticated ? (
+                    <>
+                      <Button asChild className="gap-2">
+                        <Link to="/dashboard">
+                          <LayoutDashboard className="h-4 w-4" /> Go to
+                          Dashboard
+                        </Link>
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={logout}
+                        className="gap-2 text-destructive"
+                      >
+                        <LogOut className="h-4 w-4" /> Log out
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button variant="outline" asChild>
+                        <Link to="/login">Log in</Link>
+                      </Button>
+                      <Button asChild>
+                        <Link to="/register">Get started</Link>
+                      </Button>
+                    </>
+                  )}
                 </div>
               </div>
             </SheetContent>
