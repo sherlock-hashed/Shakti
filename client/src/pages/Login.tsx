@@ -39,12 +39,10 @@ export function Login() {
           msg =
             "Unable to connect to server. Please check your internet connection.";
         } else if (err.response.status === 401) {
-          msg =
-            "Invalid email or password. Please check your credentials.";
+          msg = "Invalid email or password. Please check your credentials.";
         } else {
           msg =
-            err.response.data?.message ||
-            "Log in failed. Please try again.";
+            err.response.data?.message || "Log in failed. Please try again.";
         }
       }
       setError(msg);
