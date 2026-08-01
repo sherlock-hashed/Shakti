@@ -47,11 +47,15 @@ export function Register() {
       let msg = "Could not create account";
       if (axios.isAxiosError(err)) {
         if (!err.response || err.code === "ERR_NETWORK") {
-          msg = "Unable to connect to server. Please check your internet connection.";
+          msg =
+            "Unable to connect to server. Please check your internet connection.";
         } else if (err.response.status === 409) {
-          msg = "An account with this email address already exists. Please log in.";
+          msg =
+            "An account with this email address already exists. Please log in.";
         } else {
-          msg = err.response.data?.message || "Account creation failed. Please try again.";
+          msg =
+            err.response.data?.message ||
+            "Account creation failed. Please try again.";
         }
       }
       setError(msg);
