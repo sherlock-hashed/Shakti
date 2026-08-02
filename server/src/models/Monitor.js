@@ -71,8 +71,9 @@ const monitorSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Compound index: user + name should be unique (a user can't have two monitors with the same name)
+// Compound indexes: Enforce uniqueness per user account
 monitorSchema.index({ user: 1, name: 1 }, { unique: true });
+monitorSchema.index({ user: 1, url: 1 }, { unique: true });
 
 const Monitor = mongoose.model("Monitor", monitorSchema);
 
