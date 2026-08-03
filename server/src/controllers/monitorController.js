@@ -172,6 +172,11 @@ export async function updateMonitor(req, res, next) {
       }
     }
 
+    // Reset lastCheckedAt to null if interval or active state changed so it checks immediately
+    if (updates.intervalMinutes !== undefined || updates.isActive === true) {
+      updates.lastCheckedAt = null;
+    }
+
     if (updates.url) {
       const existingUrl = await Monitor.findOne({
         _id: { $ne: req.params.id },
