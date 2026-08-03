@@ -36,7 +36,7 @@ async function checkAndAlert(monitor) {
   // Trigger email alert ONLY on state change
   if (stateFlipped && newAlertStatus && monitor.user && monitor.user.email) {
     console.log(
-      `🔔 State change detected for "${monitor.name}" (${previousStatus} -> ${newIsUp ? "up" : "down"}). Sending ${newAlertStatus} alert email...`
+      `🔔 State change detected for "${monitor.name}" (${previousStatus} -> ${newIsUp ? "up" : "down"}). Sending ${newAlertStatus} alert email...`,
     );
 
     // Fire and forget (or await) email sending so it doesn't block scheduler loop
@@ -90,17 +90,21 @@ export function startScheduler() {
 
   const task = cron.schedule("* * * * *", async () => {
     if (isRunning) {
-      console.log("[CronScheduler] Sweep already in progress, skipping interval.");
+      console.log(
+        "[CronScheduler] Sweep already in progress, skipping interval.",
+      );
       return;
     }
 
     isRunning = true;
     try {
       const now = new Date();
+      // Add a 5-second tolerance buffer (5000ms) to handle millisecond execution latency drift
+      const targetTime = new Date(now.getTime() + 5000);
 
       // Find active monitors that are due for check:
       // - lastCheckedAt is null (never checked)
-      // - OR lastCheckedAt + (intervalMinutes * 60 * 1000) <= now
+      // - OR lastCheckedAt + (intervalMinutes * 60 * 1000) <= targetTime
       const monitors = await Monitor.find({
         isActive: true,
         $or: [
@@ -114,7 +118,7 @@ export function startScheduler() {
                     { $multiply: ["$intervalMinutes", 60 * 1000] },
                   ],
                 },
-                now,
+                targetTime,
               ],
             },
           },
@@ -126,7 +130,7 @@ export function startScheduler() {
       }
 
       console.log(
-        `[CronScheduler] ${now.toISOString()} — Checking ${monitors.length} due monitor(s)...`
+        `[CronScheduler] ${now.toISOString()} — Checking ${monitors.length} due monitor(s)...`,
       );
 
       const results = await processWithConcurrency(monitors);
@@ -136,7 +140,7 @@ export function startScheduler() {
       const alertsSent = results.filter((r) => r.stateFlipped).length;
 
       console.log(
-        `[CronScheduler] Sweep complete — ${upCount} up, ${downCount} down (${alertsSent} alert(s) triggered)`
+        `[CronScheduler] Sweep complete — ${upCount} up, ${downCount} down (${alertsSent} alert(s) triggered)`,
       );
     } catch (error) {
       console.error("[CronScheduler] Sweep error:", error.message);
