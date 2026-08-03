@@ -302,7 +302,7 @@ function MonitorDetailView() {
               ) : (
                 <>
                   <RecentChecksTable
-                    checks={[...data.checks].reverse().slice(0, visibleCount)}
+                    checks={data.checks.slice(0, visibleCount)}
                     latencyThresholdMs={data.latencyThresholdMs}
                   />
                   {visibleCount < data.checks.length && (
