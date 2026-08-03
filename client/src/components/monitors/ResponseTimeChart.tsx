@@ -32,7 +32,10 @@ export function ResponseTimeChart({ checks }: { checks: Check[] }) {
 
   return (
     <ChartContainer config={config} className="h-64 w-full">
-      <LineChart data={data} margin={{ left: 4, right: 12, top: 8, bottom: 4 }}>
+      <LineChart
+        data={data}
+        margin={{ left: 16, right: 16, top: 12, bottom: 4 }}
+      >
         <CartesianGrid vertical={false} strokeDasharray="3 3" />
         <XAxis
           dataKey="t"
@@ -45,8 +48,8 @@ export function ResponseTimeChart({ checks }: { checks: Check[] }) {
           tickLine={false}
           axisLine={false}
           tickMargin={8}
-          width={40}
-          unit="ms"
+          width={56}
+          tickFormatter={(val) => `${val}ms`}
         />
         <ChartTooltip content={<ChartTooltipContent indicator="line" />} />
         <Line
