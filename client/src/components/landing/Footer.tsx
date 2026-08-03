@@ -46,16 +46,13 @@ export function Footer() {
           <ul className="space-y-2 text-sm text-muted-foreground">
             <li>
               <a
-                href="#"
+                href="https://github.com/sherlock-hashed/Shakti"
+                target="_blank"
+                rel="noreferrer"
                 className="inline-flex items-center gap-1.5 hover:text-foreground"
               >
                 <Github className="h-3.5 w-3.5" />
                 GitHub repo
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:text-foreground">
-                Portfolio
               </a>
             </li>
           </ul>
@@ -64,21 +61,25 @@ export function Footer() {
           <div className="mb-3 text-sm font-semibold">Connect</div>
           <div className="flex items-center gap-2 text-muted-foreground">
             <a
-              href="#"
+              href="https://github.com/sherlock-hashed"
+              target="_blank"
+              rel="noreferrer"
               aria-label="GitHub"
               className="grid h-9 w-9 place-items-center rounded-lg border border-border transition-colors hover:border-primary/40 hover:text-foreground"
             >
               <Github className="h-4 w-4" />
             </a>
             <a
-              href="#"
+              href="https://in.linkedin.com/in/varad-parate-34b38328a"
+              target="_blank"
+              rel="noreferrer"
               aria-label="LinkedIn"
               className="grid h-9 w-9 place-items-center rounded-lg border border-border transition-colors hover:border-primary/40 hover:text-foreground"
             >
               <Linkedin className="h-4 w-4" />
             </a>
             <a
-              href="#"
+              href="mailto:varadparate@gmail.com"
               aria-label="Email"
               className="grid h-9 w-9 place-items-center rounded-lg border border-border transition-colors hover:border-primary/40 hover:text-foreground"
             >
