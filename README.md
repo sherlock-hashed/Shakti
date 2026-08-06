@@ -26,25 +26,24 @@ A production-grade, full-stack MERN application for real-time API uptime monitor
 | # | Section | Description |
 |---|---|---|
 | 1 | [Problem Statement](#-problem-statement) | Overview of the outage detection problem solved by Pulseboard |
-| 2 | [Overview & Solution Summary](#-overview--solution-summary) | High-level summary of system capabilities & design goals |
-| 3 | [System Architecture (HLD)](#-system-architecture-hld) | High-level hybrid cloud deployment diagram |
-| 4 | [Low-Level Design (LLD)](#-low-level-design-lld) | Health check & alert execution sequence diagram |
-| 5 | [Core Features](#-core-features) | Essential monitoring, alerting, & operational capabilities |
-| 6 | [Live Deployments](#-live-deployments) | Live URLs for frontend, backend API, & health check endpoints |
-| 7 | [Core Tech Stack](#️-core-tech-stack) | Primary runtime, framework, & database technologies |
-| 8 | [Installation & Setup](#-installation--setup) | Local development & Docker startup instructions |
-| 9 | [Project Structure](#-project-structure) | Repository directory tree & component breakdown |
-| 10 | [Database Documentation](#️-database-documentation) | ER diagram, indexes, & schema validation rules |
-| 11 | [API Documentation](#-api-documentation) | REST API endpoints, JWT auth, & error responses |
-| 12 | [Docker Configuration](#-docker-configuration) | 3-container architecture & multi-stage Dockerfiles |
-| 13 | [Nginx Configuration](#-nginx-configuration) | Reverse proxy, SPA routing, & caching rules |
-| 14 | [AWS Infrastructure](#️-aws-infrastructure) | EC2, Security Groups, IAM, & CloudWatch monitoring |
-| 15 | [CI/CD Pipeline](#-cicd-pipeline-github-actions) | GitHub Actions 4-job automated build & test workflow |
-| 16 | [Testing Documentation](#-testing-documentation) | Jest & Vitest test suites with terminal execution logs |
-| 17 | [Performance & Reliability](#-performance--reliability) | Concurrency, memory stability, & latency optimizations |
-| 18 | [Configuration Documentation](#️-configuration-documentation) | Environment variables & secrets management |
-| 19 | [Known Limitations](#️-known-limitations) | Trade-offs & architectural constraints |
-| 20 | [License](#-license) | Open-source software license |
+| 2 | [System Architecture (HLD)](#-system-architecture-hld) | High-level hybrid cloud deployment diagram |
+| 3 | [Low-Level Design (LLD)](#-low-level-design-lld) | Health check & alert execution sequence diagram |
+| 4 | [Core Features](#-core-features) | Essential monitoring, alerting, & operational capabilities |
+| 5 | [Live Deployments](#-live-deployments) | Live URLs for frontend, backend API, & health check endpoints |
+| 6 | [Core Tech Stack](#️-core-tech-stack) | Primary runtime, framework, & database technologies |
+| 7 | [Installation & Setup](#-installation--setup) | Local development & Docker startup instructions |
+| 8 | [Project Structure](#-project-structure) | Repository directory tree & component breakdown |
+| 9 | [Database Documentation](#️-database-documentation) | ER diagram, indexes, & schema validation rules |
+| 10 | [API Documentation](#-api-documentation) | REST API endpoints, JWT auth, & error responses |
+| 11 | [Docker Configuration](#-docker-configuration) | 3-container architecture & multi-stage Dockerfiles |
+| 12 | [Nginx Configuration](#-nginx-configuration) | Reverse proxy, SPA routing, & caching rules |
+| 13 | [AWS Infrastructure](#️-aws-infrastructure) | EC2, Security Groups, IAM, & CloudWatch monitoring |
+| 14 | [CI/CD Pipeline](#-cicd-pipeline-github-actions) | GitHub Actions 4-job automated build & test workflow |
+| 15 | [Testing Documentation](#-testing-documentation) | Jest & Vitest test suites with terminal execution logs |
+| 16 | [Performance & Reliability](#-performance--reliability) | Concurrency, memory stability, & latency optimizations |
+| 17 | [Configuration Documentation](#️-configuration-documentation) | Environment variables & secrets management |
+| 18 | [Known Limitations](#️-known-limitations) | Trade-offs & architectural constraints |
+| 19 | [License](#-license) | Open-source software license |
 
 ---
 
@@ -58,16 +57,6 @@ Modern web applications rely on multiple APIs and microservices. When an API end
 - Categorizing network failures into actionable error types (`TIMEOUT`, `DNS_FAILURE`, `CONNECTION_REFUSED`, `SSL_ERROR`)
 - Computing 24-hour rolling uptime percentages from historical check logs
 - Sending instant HTML email alerts via Nodemailer **only when service status actually changes** (UP → DOWN or DOWN → RECOVERED), preventing inbox spam
-
----
-
-## 💡 Overview & Solution Summary
-
-**Pulseboard** is a centralized API health monitoring platform engineered to provide real-time visibility into the operational state of web services and backend APIs.
-
-It periodically executes lightweight HTTP health checks against registered endpoints, measures latency with sub-millisecond precision, and tracks 24-hour availability metrics. When an outage or recovery event occurs, Pulseboard notifies stakeholders immediately via automated, state-aware HTML email alerts — ensuring zero alert fatigue while delivering actionable failure diagnostics.
-
-Built with a containerized MERN architecture, Pulseboard runs across a hybrid cloud topology combining AWS EC2 container hosting with Vercel edge proxying.
 
 ---
 
