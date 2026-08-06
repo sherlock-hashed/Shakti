@@ -4,7 +4,7 @@
 
 A production-grade, full-stack MERN application for real-time API uptime monitoring, response latency tracking, threshold violation detection, and automated incident email alerting — deployed on AWS EC2 and Vercel.
 
-[![CI — Lint, Test & Docker Build](https://github.com/sherlock-hashed/Shakti/actions/workflows/ci.yml/badge.svg)](https://github.com/sherlock-hashed/Shakti/actions/workflows/ci.yml)
+[![CI Pipeline](https://img.shields.io/github/actions/workflow/status/sherlock-hashed/Shakti/ci.yml?branch=main&style=for-the-badge&logo=githubactions&logoColor=white&label=CI%20Pipeline)](https://github.com/sherlock-hashed/Shakti/actions/workflows/ci.yml)
 ![Node.js](https://img.shields.io/badge/Node.js-22.x-339933?style=for-the-badge&logo=node.js&logoColor=white)
 ![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)
 ![Express](https://img.shields.io/badge/Express-5-000000?style=for-the-badge&logo=express&logoColor=white)
@@ -26,24 +26,25 @@ A production-grade, full-stack MERN application for real-time API uptime monitor
 | # | Section | Description |
 |---|---|---|
 | 1 | [Problem Statement](#-problem-statement) | Overview of the outage detection problem solved by Pulseboard |
-| 2 | [Core Features](#-core-features) | Essential monitoring, alerting, & operational capabilities |
-| 3 | [Live Deployments](#-live-deployments) | Live URLs for frontend, backend API, & health check endpoints |
-| 4 | [Core Tech Stack](#️-core-tech-stack) | Primary runtime, framework, & database technologies |
-| 5 | [Project Structure](#-project-structure) | Repository directory tree & component breakdown |
-| 6 | [Installation & Setup](#-installation--setup) | Local development & Docker startup instructions |
-| 7 | [System Architecture (HLD)](#-system-architecture-hld) | High-level hybrid cloud deployment diagram |
-| 8 | [Low-Level Design (LLD)](#-low-level-design-lld) | Health check & alert execution sequence diagram |
-| 9 | [Database Documentation](#️-database-documentation) | ER diagram, indexes, & schema validation rules |
-| 10 | [API Documentation](#-api-documentation) | REST API endpoints, JWT auth, & error responses |
-| 11 | [Docker Configuration](#-docker-configuration) | 3-container architecture & multi-stage Dockerfiles |
-| 12 | [Nginx Configuration](#-nginx-configuration) | Reverse proxy, SPA routing, & caching rules |
-| 13 | [AWS Infrastructure](#️-aws-infrastructure) | EC2, Security Groups, IAM, & CloudWatch monitoring |
-| 14 | [CI/CD Pipeline](#-cicd-pipeline-github-actions) | GitHub Actions 4-job automated build & test workflow |
-| 15 | [Testing Documentation](#-testing-documentation) | Jest & Vitest test suites with terminal execution logs |
-| 16 | [Performance & Reliability](#-performance--reliability) | Concurrency, memory stability, & latency optimizations |
-| 17 | [Configuration Documentation](#️-configuration-documentation) | Environment variables & secrets management |
-| 18 | [Known Limitations](#️-known-limitations) | Trade-offs & architectural constraints |
-| 19 | [License](#-license) | Open-source software license |
+| 2 | [Overview & Solution Summary](#-overview--solution-summary) | High-level summary of system capabilities & design goals |
+| 3 | [System Architecture (HLD)](#-system-architecture-hld) | High-level hybrid cloud deployment diagram |
+| 4 | [Low-Level Design (LLD)](#-low-level-design-lld) | Health check & alert execution sequence diagram |
+| 5 | [Core Features](#-core-features) | Essential monitoring, alerting, & operational capabilities |
+| 6 | [Live Deployments](#-live-deployments) | Live URLs for frontend, backend API, & health check endpoints |
+| 7 | [Core Tech Stack](#️-core-tech-stack) | Primary runtime, framework, & database technologies |
+| 8 | [Installation & Setup](#-installation--setup) | Local development & Docker startup instructions |
+| 9 | [Project Structure](#-project-structure) | Repository directory tree & component breakdown |
+| 10 | [Database Documentation](#️-database-documentation) | ER diagram, indexes, & schema validation rules |
+| 11 | [API Documentation](#-api-documentation) | REST API endpoints, JWT auth, & error responses |
+| 12 | [Docker Configuration](#-docker-configuration) | 3-container architecture & multi-stage Dockerfiles |
+| 13 | [Nginx Configuration](#-nginx-configuration) | Reverse proxy, SPA routing, & caching rules |
+| 14 | [AWS Infrastructure](#️-aws-infrastructure) | EC2, Security Groups, IAM, & CloudWatch monitoring |
+| 15 | [CI/CD Pipeline](#-cicd-pipeline-github-actions) | GitHub Actions 4-job automated build & test workflow |
+| 16 | [Testing Documentation](#-testing-documentation) | Jest & Vitest test suites with terminal execution logs |
+| 17 | [Performance & Reliability](#-performance--reliability) | Concurrency, memory stability, & latency optimizations |
+| 18 | [Configuration Documentation](#️-configuration-documentation) | Environment variables & secrets management |
+| 19 | [Known Limitations](#️-known-limitations) | Trade-offs & architectural constraints |
+| 20 | [License](#-license) | Open-source software license |
 
 ---
 
@@ -60,203 +61,13 @@ Modern web applications rely on multiple APIs and microservices. When an API end
 
 ---
 
-## ✨ Core Features
+## 💡 Overview & Solution Summary
 
-| Feature | Description |
-|---|---|
-| ⏱️ **Automated Health Checks** | Background worker (`node-cron`) sweeps active monitors every 60 seconds with configurable check intervals (1, 5, 15, or 30 mins) and a 10s timeout. |
-| 🔔 **State-Flip Alert System** | Automated Nodemailer integration dispatches HTML email notifications **only on status transitions** (`UP` $\leftrightarrow$ `DOWN`), preventing inbox fatigue. |
-| 📊 **Real-Time Latency & Uptime** | Measures response time using `performance.now()` and calculates 24-hour rolling uptime percentages updated after every health check. |
-| 🏷️ **Error Categorization** | Automatically categorizes failures into actionable types: `TIMEOUT`, `DNS_FAILURE`, `CONNECTION_REFUSED`, `CONNECTION_RESET`, or `SSL_ERROR`. |
-| 🔒 **Multi-Tenant JWT Auth** | User registration and authentication with 12-round bcrypt password hashing and database-level isolation per user. |
-| 🐳 **Dockerized Deployment** | Orchestrated via Docker Compose with 3 isolated containers (Nginx reverse proxy, Express API, MongoDB 7). |
-| ☁️ **AWS & CDN Hosting** | Hosted on AWS EC2 (`t2.micro` Ubuntu 22.04) with CloudWatch CPU monitoring and Vercel global CDN edge proxying. |
-| 🧹 **Automated Data Retention** | MongoDB TTL index (`expireAfterSeconds: 2592000`) automatically purges check logs older than 30 days to ensure database health. |
+**Pulseboard** is a centralized API health monitoring platform engineered to provide real-time visibility into the operational state of web services and backend APIs.
 
----
+It periodically executes lightweight HTTP health checks against registered endpoints, measures latency with sub-millisecond precision, and tracks 24-hour availability metrics. When an outage or recovery event occurs, Pulseboard notifies stakeholders immediately via automated, state-aware HTML email alerts — ensuring zero alert fatigue while delivering actionable failure diagnostics.
 
-## 🌐 Live Deployments
-
-| Environment | URL |
-|---|---|
-| **Frontend** (Vercel CDN) | [https://shakti-liard.vercel.app](https://shakti-liard.vercel.app) |
-| **Backend API** (AWS EC2) | `http://34.228.14.119:5000/api` |
-| **Health Check** | `http://34.228.14.119:5000/api/health` |
-| **Source Code** | [github.com/sherlock-hashed/Shakti](https://github.com/sherlock-hashed/Shakti) |
-
----
-
-## 🛠️ Core Tech Stack
-
-| Layer | Technology | Purpose |
-|---|---|---|
-| **Frontend** | React 19 · TypeScript | Component-based SPA with strict static typing |
-| **Backend** | Node.js 22 · Express 5 | RESTful API server with asynchronous request handling |
-| **Database** | MongoDB 7 · Mongoose | Document database with schema validation & TTL indexes |
-| **Containerization** | Docker · Docker Compose | Multi-stage container builds & local/prod orchestration |
-| **Web Server** | Nginx | Reverse proxy, static asset caching, & SPA routing fallback |
-| **Cloud Hosting** | AWS EC2 · Vercel CDN | EC2 backend host with Vercel edge reverse proxy |
-| **CI/CD** | GitHub Actions | 4-job automated pipeline (linting, tests, Docker build) |
-| **Testing** | Jest · Vitest | End-to-end unit and integration test coverage (49 tests) |
-
----
-
-## 📁 Project Structure
-
-```
-pulseboard/
-├── .github/
-│   └── workflows/
-│       └── ci.yml                        # GitHub Actions CI/CD pipeline
-│
-├── client/                               # React 19 + TypeScript SPA
-│   ├── public/
-│   │   ├── favicon.svg                   # Pulse logo SVG favicon
-│   │   └── favicon.ico                   # Classic favicon
-│   ├── src/
-│   │   ├── api/
-│   │   │   ├── axiosInstance.ts          # Axios client, token injection, 401 interceptor
-│   │   │   └── monitorApi.ts            # Typed API service (list, get, create, update, delete)
-│   │   ├── components/
-│   │   │   ├── landing/                 # PublicNavbar, Hero, Features, HowItWorks, StatsStrip, FinalCta, Footer
-│   │   │   ├── layout/                  # Navbar, ProtectedRoute
-│   │   │   ├── monitors/               # MonitorCard, StatusBadge, ResponseTimeChart, RecentChecksTable
-│   │   │   │                           # AddEditMonitorModal, AlertReportsModal
-│   │   │   ├── ui/                     # Radix-based primitives (Button, Card, Dialog, Input, etc.)
-│   │   │   └── theme-toggle.tsx        # Dark/light mode toggle
-│   │   ├── context/
-│   │   │   └── AuthContext.tsx          # Auth provider (login, register, logout, token persistence)
-│   │   ├── hooks/
-│   │   │   └── useMonitors.ts           # Polling hook (20s interval)
-│   │   ├── lib/
-│   │   │   ├── theme.tsx                # Theme context with localStorage persistence
-│   │   │   ├── format.ts               # Relative time formatter (12s ago, 5 min ago)
-│   │   │   ├── exportMonitors.ts       # CSV & PDF monitor list exporter
-│   │   │   ├── exportChecks.ts         # CSV & PDF check log exporter
-│   │   │   └── utils.ts                # Tailwind class merge (cn utility)
-│   │   ├── pages/
-│   │   │   ├── Landing.tsx             # Public marketing homepage
-│   │   │   ├── Login.tsx               # Login page + AuthShell + FieldWithIcon
-│   │   │   ├── Register.tsx            # Registration page
-│   │   │   ├── Dashboard.tsx           # Main monitoring dashboard (search, filter, bulk actions, export)
-│   │   │   ├── MonitorDetail.tsx       # Single monitor view (charts, check logs, thresholds)
-│   │   │   └── NotFound.tsx            # 404 page
-│   │   ├── App.tsx                     # React Router route definitions
-│   │   └── main.tsx                    # Application entrypoint
-│   ├── tests/
-│   │   ├── setup.ts                    # Vitest setup (polyfills for Radix UI in jsdom)
-│   │   ├── Dashboard.test.tsx          # 5 tests
-│   │   ├── Login.test.tsx              # 4 tests
-│   │   └── AddEditMonitorModal.test.tsx # 4 tests
-│   ├── Dockerfile                      # Multi-stage Nginx build
-│   ├── nginx.conf                      # Reverse proxy & SPA routing
-│   ├── vercel.json                     # Vercel API proxy rewrites
-│   ├── vite.config.ts                  # Vite + Vitest configuration
-│   ├── tsconfig.json
-│   └── package.json
-│
-├── server/                              # Express 5 REST API + Cron Engine
-│   ├── src/
-│   │   ├── config/
-│   │   │   └── db.js                   # MongoDB connection handler
-│   │   ├── controllers/
-│   │   │   ├── authController.js       # register, login, getMe
-│   │   │   └── monitorController.js    # CRUD + duplicate validation + cascading delete
-│   │   ├── cron/
-│   │   │   └── scheduler.js            # node-cron worker (1m sweeps, 10-request concurrency, 5s buffer)
-│   │   ├── middleware/
-│   │   │   └── auth.js                 # JWT Bearer token verification
-│   │   ├── models/
-│   │   │   ├── User.js                 # User schema (bcrypt pre-save hook, 12-round salt)
-│   │   │   ├── Monitor.js              # Monitor schema (compound unique indexes per user)
-│   │   │   └── CheckLog.js             # CheckLog schema (30-day TTL auto-cleanup)
-│   │   ├── routes/
-│   │   │   ├── authRoutes.js           # /api/auth/* endpoints
-│   │   │   └── monitorRoutes.js        # /api/monitors/* endpoints (all protected)
-│   │   ├── utils/
-│   │   │   ├── jwt.js                  # Token sign (7d expiry) & verify helpers
-│   │   │   ├── performHealthCheck.js   # HTTP checker (10s timeout, error categorization, uptime calc)
-│   │   │   ├── sendAlertEmail.js       # Nodemailer HTML alert email templates (DOWN/RECOVERED)
-│   │   │   └── calculateUptime.js      # Uptime percentage math (2-decimal rounding)
-│   │   ├── app.js                      # Express app setup (CORS, routes, error handler)
-│   │   └── server.js                   # Entry point (DB connect, scheduler start, listen)
-│   ├── tests/
-│   │   ├── setup.js                    # MongoMemoryServer test infrastructure
-│   │   ├── auth.test.js                # 8 tests
-│   │   ├── monitors.test.js            # 8 tests (includes cross-user isolation)
-│   │   ├── healthCheck.test.js         # 4 tests (nock HTTP mocking)
-│   │   ├── alert.test.js               # 6 tests (state-flip logic)
-│   │   └── uptime.test.js             # 9 tests (math edge cases)
-│   ├── Dockerfile                      # Multi-stage build with non-root user (appuser)
-│   ├── .dockerignore
-│   ├── jest.config.js
-│   └── package.json
-│
-├── docs/
-│   ├── EC2_BACKEND_DEPLOYMENT_GUIDE.md       # AWS EC2 setup & Docker deployment
-│   ├── VERCEL_FRONTEND_DEPLOYMENT_GUIDE.md   # Vercel setup & HTTPS proxy config
-│   └── AWS_IAM_CLOUDWATCH_SETUP.md           # IAM policy & CloudWatch alarm config
-│
-├── docker-compose.yml                   # 3-container production orchestration
-├── .gitignore
-└── README.md
-```
-
----
-
-## 🚀 Installation & Setup
-
-### Prerequisites
-
-- Node.js >= 20
-- MongoDB (local instance or MongoDB Atlas URI)
-- Git
-
-### Local Development
-
-```bash
-# 1. Clone the repository
-git clone https://github.com/sherlock-hashed/Shakti.git pulseboard
-cd pulseboard
-
-# 2. Install server dependencies
-cd server && npm install
-
-# 3. Install client dependencies
-cd ../client && npm install
-
-# 4. Configure environment
-cd ../server
-cp .env.example .env
-# Edit .env with your credentials (see Configuration section below)
-
-# 5. Start backend (Terminal 1)
-cd server && npm run dev
-
-# 6. Start frontend (Terminal 2)
-cd client && npm run dev
-```
-
-Open `http://localhost:5173` in your browser.
-
-### Docker Installation
-
-```bash
-# 1. Clone and configure
-git clone https://github.com/sherlock-hashed/Shakti.git pulseboard
-cd pulseboard
-nano server/.env    # Add your environment variables
-cp server/.env .env # Docker Compose reads from root .env
-
-# 2. Build and start all containers
-docker compose up --build -d
-
-# 3. Verify
-docker ps           # Should show 3 running containers
-curl http://localhost:5000/api/health  # Should return {"status":"ok"}
-```
-
-The frontend is accessible at `http://localhost:3000` and the API at `http://localhost:5000/api`.
+Built with a containerized MERN architecture, Pulseboard runs across a hybrid cloud topology combining AWS EC2 container hosting with Vercel edge proxying.
 
 ---
 
@@ -367,6 +178,206 @@ sequenceDiagram
             Note over Cron: Alert skipped — prevents email spam
         end
     end
+```
+
+---
+
+## ✨ Core Features
+
+| Feature | Description |
+|---|---|
+| ⏱️ **Automated Health Checks** | Background worker (`node-cron`) sweeps active monitors every 60 seconds with configurable check intervals (1, 5, 15, or 30 mins) and a 10s timeout. |
+| 🔔 **State-Flip Alert System** | Automated Nodemailer integration dispatches HTML email notifications **only on status transitions** (`UP` $\leftrightarrow$ `DOWN`), preventing inbox fatigue. |
+| 📊 **Real-Time Latency & Uptime** | Measures response time using `performance.now()` and calculates 24-hour rolling uptime percentages updated after every health check. |
+| 🏷️ **Error Categorization** | Automatically categorizes failures into actionable types: `TIMEOUT`, `DNS_FAILURE`, `CONNECTION_REFUSED`, `CONNECTION_RESET`, or `SSL_ERROR`. |
+| 🔒 **Multi-Tenant JWT Auth** | User registration and authentication with 12-round bcrypt password hashing and database-level isolation per user. |
+| 🐳 **Dockerized Deployment** | Orchestrated via Docker Compose with 3 isolated containers (Nginx reverse proxy, Express API, MongoDB 7). |
+| ☁️ **AWS & CDN Hosting** | Hosted on AWS EC2 (`t2.micro` Ubuntu 22.04) with CloudWatch CPU monitoring and Vercel global CDN edge proxying. |
+| 🧹 **Automated Data Retention** | MongoDB TTL index (`expireAfterSeconds: 2592000`) automatically purges check logs older than 30 days to ensure database health. |
+
+---
+
+## 🌐 Live Deployments
+
+| Environment | URL |
+|---|---|
+| **Frontend** (Vercel CDN) | [https://shakti-liard.vercel.app](https://shakti-liard.vercel.app) |
+| **Backend API** (AWS EC2) | `http://34.228.14.119:5000/api` |
+| **Health Check** | `http://34.228.14.119:5000/api/health` |
+| **Source Code** | [github.com/sherlock-hashed/Shakti](https://github.com/sherlock-hashed/Shakti) |
+
+---
+
+## 🛠️ Core Tech Stack
+
+| Layer | Technology | Purpose |
+|---|---|---|
+| **Frontend** | React 19 · TypeScript | Component-based SPA with strict static typing |
+| **Backend** | Node.js 22 · Express 5 | RESTful API server with asynchronous request handling |
+| **Database** | MongoDB 7 · Mongoose | Document database with schema validation & TTL indexes |
+| **Containerization** | Docker · Docker Compose | Multi-stage container builds & local/prod orchestration |
+| **Web Server** | Nginx | Reverse proxy, static asset caching, & SPA routing fallback |
+| **Cloud Hosting** | AWS EC2 · Vercel CDN | EC2 backend host with Vercel edge reverse proxy |
+| **CI/CD** | GitHub Actions | 4-job automated pipeline (linting, tests, Docker build) |
+| **Testing** | Jest · Vitest | End-to-end unit and integration test coverage (49 tests) |
+
+---
+
+## 🚀 Installation & Setup
+
+### Prerequisites
+
+- Node.js >= 20
+- MongoDB (local instance or MongoDB Atlas URI)
+- Git
+
+### Local Development
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/sherlock-hashed/Shakti.git pulseboard
+cd pulseboard
+
+# 2. Install server dependencies
+cd server && npm install
+
+# 3. Install client dependencies
+cd ../client && npm install
+
+# 4. Configure environment
+cd ../server
+cp .env.example .env
+# Edit .env with your credentials (see Configuration section below)
+
+# 5. Start backend (Terminal 1)
+cd server && npm run dev
+
+# 6. Start frontend (Terminal 2)
+cd client && npm run dev
+```
+
+Open `http://localhost:5173` in your browser.
+
+### Docker Installation
+
+```bash
+# 1. Clone and configure
+git clone https://github.com/sherlock-hashed/Shakti.git pulseboard
+cd pulseboard
+nano server/.env    # Add your environment variables
+cp server/.env .env # Docker Compose reads from root .env
+
+# 2. Build and start all containers
+docker compose up --build -d
+
+# 3. Verify
+docker ps           # Should show 3 running containers
+curl http://localhost:5000/api/health  # Should return {"status":"ok"}
+```
+
+The frontend is accessible at `http://localhost:3000` and the API at `http://localhost:5000/api`.
+
+---
+
+## 📁 Project Structure
+
+```
+pulseboard/
+├── .github/
+│   └── workflows/
+│       └── ci.yml                        # GitHub Actions CI/CD pipeline
+│
+├── client/                               # React 19 + TypeScript SPA
+│   ├── public/
+│   │   ├── favicon.svg                   # Pulse logo SVG favicon
+│   │   └── favicon.ico                   # Classic favicon
+│   ├── src/
+│   │   ├── api/
+│   │   │   ├── axiosInstance.ts          # Axios client, token injection, 401 interceptor
+│   │   │   └── monitorApi.ts            # Typed API service (list, get, create, update, delete)
+│   │   ├── components/
+│   │   │   ├── landing/                 # PublicNavbar, Hero, Features, HowItWorks, StatsStrip, FinalCta, Footer
+│   │   │   ├── layout/                  # Navbar, ProtectedRoute
+│   │   │   ├── monitors/               # MonitorCard, StatusBadge, ResponseTimeChart, RecentChecksTable
+│   │   │   │                           # AddEditMonitorModal, AlertReportsModal
+│   │   │   ├── ui/                     # Radix-based primitives (Button, Card, Dialog, Input, etc.)
+│   │   │   └── theme-toggle.tsx        # Dark/light mode toggle
+│   │   ├── context/
+│   │   │   └── AuthContext.tsx          # Auth provider (login, register, logout, token persistence)
+│   │   ├── hooks/
+│   │   │   └── useMonitors.ts           # Polling hook (20s interval)
+│   │   ├── lib/
+│   │   │   ├── theme.tsx                # Theme context with localStorage persistence
+│   │   │   ├── format.ts               # Relative time formatter (12s ago, 5 min ago)
+│   │   │   ├── exportMonitors.ts       # CSV & PDF monitor list exporter
+│   │   │   ├── exportChecks.ts         # CSV & PDF check log exporter
+│   │   │   └── utils.ts                # Tailwind class merge (cn utility)
+│   │   ├── pages/
+│   │   │   ├── Landing.tsx             # Public marketing homepage
+│   │   │   ├── Login.tsx               # Login page + AuthShell + FieldWithIcon
+│   │   │   ├── Register.tsx            # Registration page
+│   │   │   ├── Dashboard.tsx           # Main monitoring dashboard (search, filter, bulk actions, export)
+│   │   │   ├── MonitorDetail.tsx       # Single monitor view (charts, check logs, thresholds)
+│   │   │   └── NotFound.tsx            # 404 page
+│   │   ├── App.tsx                     # React Router route definitions
+│   │   └── main.tsx                    # Application entrypoint
+│   ├── tests/
+│   │   ├── setup.ts                    # Vitest setup (polyfills for Radix UI in jsdom)
+│   │   ├── Dashboard.test.tsx          # 5 tests
+│   │   ├── Login.test.tsx              # 4 tests
+│   │   └── AddEditMonitorModal.test.tsx # 4 tests
+│   ├── Dockerfile                      # Multi-stage Nginx build
+│   ├── nginx.conf                      # Reverse proxy & SPA routing
+│   ├── vercel.json                     # Vercel API proxy rewrites
+│   ├── vite.config.ts                  # Vite + Vitest configuration
+│   ├── tsconfig.json
+│   └── package.json
+│
+├── server/                              # Express 5 REST API + Cron Engine
+│   ├── src/
+│   │   ├── config/
+│   │   │   └── db.js                   # MongoDB connection handler
+│   │   ├── controllers/
+│   │   │   ├── authController.js       # register, login, getMe
+│   │   │   └── monitorController.js    # CRUD + duplicate validation + cascading delete
+│   │   ├── cron/
+│   │   │   └── scheduler.js            # node-cron worker (1m sweeps, 10-request concurrency, 5s buffer)
+│   │   ├── middleware/
+│   │   │   └── auth.js                 # JWT Bearer token verification
+│   │   ├── models/
+│   │   │   ├── User.js                 # User schema (bcrypt pre-save hook, 12-round salt)
+│   │   │   ├── Monitor.js              # Monitor schema (compound unique indexes per user)
+│   │   │   └── CheckLog.js             # CheckLog schema (30-day TTL auto-cleanup)
+│   │   ├── routes/
+│   │   │   ├── authRoutes.js           # /api/auth/* endpoints
+│   │   │   └── monitorRoutes.js        # /api/monitors/* endpoints (all protected)
+│   │   ├── utils/
+│   │   │   ├── jwt.js                  # Token sign (7d expiry) & verify helpers
+│   │   │   ├── performHealthCheck.js   # HTTP checker (10s timeout, error categorization, uptime calc)
+│   │   │   ├── sendAlertEmail.js       # Nodemailer HTML alert email templates (DOWN/RECOVERED)
+│   │   │   └── calculateUptime.js      # Uptime percentage math (2-decimal rounding)
+│   │   ├── app.js                      # Express app setup (CORS, routes, error handler)
+│   │   └── server.js                   # Entry point (DB connect, scheduler start, listen)
+│   ├── tests/
+│   │   ├── setup.js                    # MongoMemoryServer test infrastructure
+│   │   ├── auth.test.js                # 8 tests
+│   │   ├── monitors.test.js            # 8 tests (includes cross-user isolation)
+│   │   ├── healthCheck.test.js         # 4 tests (nock HTTP mocking)
+│   │   ├── alert.test.js               # 6 tests (state-flip logic)
+│   │   └── uptime.test.js             # 9 tests (math edge cases)
+│   ├── Dockerfile                      # Multi-stage build with non-root user (appuser)
+│   ├── .dockerignore
+│   ├── jest.config.js
+│   └── package.json
+│
+├── docs/
+│   ├── EC2_BACKEND_DEPLOYMENT_GUIDE.md       # AWS EC2 setup & Docker deployment
+│   ├── VERCEL_FRONTEND_DEPLOYMENT_GUIDE.md   # Vercel setup & HTTPS proxy config
+│   └── AWS_IAM_CLOUDWATCH_SETUP.md           # IAM policy & CloudWatch alarm config
+│
+├── docker-compose.yml                   # 3-container production orchestration
+├── .gitignore
+└── README.md
 ```
 
 ---
