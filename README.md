@@ -5,15 +5,15 @@
 A production-grade, full-stack MERN application for real-time API uptime monitoring, response latency tracking, threshold violation detection, and automated incident email alerting — deployed on AWS EC2 and Vercel.
 
 [![CI — Lint, Test & Docker Build](https://github.com/sherlock-hashed/Shakti/actions/workflows/ci.yml/badge.svg)](https://github.com/sherlock-hashed/Shakti/actions/workflows/ci.yml)
-![Node.js](https://img.shields.io/badge/Node.js-22.x-339933?logo=node.js&logoColor=white)
-![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
-![Express](https://img.shields.io/badge/Express-5-000000?logo=express&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB-7.0-47A248?logo=mongodb&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
-![AWS](https://img.shields.io/badge/AWS-EC2-FF9900?logo=amazonaws&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6?logo=typescript&logoColor=white)
-![Tests](https://img.shields.io/badge/Tests-49%20Passing-brightgreen?logo=jest&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-blue)
+![Node.js](https://img.shields.io/badge/Node.js-22.x-339933?style=for-the-badge&logo=node.js&logoColor=white)
+![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![Express](https://img.shields.io/badge/Express-5-000000?style=for-the-badge&logo=express&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-7.0-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![AWS](https://img.shields.io/badge/AWS-EC2-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Tests](https://img.shields.io/badge/Tests-49%20Passing-brightgreen?style=for-the-badge&logo=jest&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)
 
 [Live Demo](https://shakti-liard.vercel.app) · [GitHub](https://github.com/sherlock-hashed/Shakti) · [API Health](http://34.228.14.119:5000/api/health)
 
@@ -23,25 +23,27 @@ A production-grade, full-stack MERN application for real-time API uptime monitor
 
 ## 📑 Table of Contents
 
-- [Problem Statement](#-problem-statement)
-- [Features](#-features)
-- [Live Deployments](#-live-deployments)
-- [Tech Stack](#️-tech-stack)
-- [Project Structure](#-project-structure)
-- [Installation & Setup](#-installation--setup)
-- [System Architecture (HLD)](#-system-architecture-hld)
-- [Low-Level Design (LLD)](#-low-level-design-lld)
-- [Database Documentation](#️-database-documentation)
-- [API Documentation](#-api-documentation)
-- [Docker Configuration](#-docker-configuration)
-- [Nginx Configuration](#-nginx-configuration)
-- [AWS Infrastructure](#️-aws-infrastructure)
-- [CI/CD Pipeline](#-cicd-pipeline-github-actions)
-- [Testing Documentation](#-testing-documentation)
-- [Performance & Reliability](#-performance--reliability)
-- [Configuration Documentation](#️-configuration-documentation)
-- [Known Limitations](#️-known-limitations)
-- [License](#-license)
+| # | Section | Description |
+|---|---|---|
+| 1 | [Problem Statement](#-problem-statement) | Overview of the outage detection problem solved by Pulseboard |
+| 2 | [Core Features](#-core-features) | Essential monitoring, alerting, & operational capabilities |
+| 3 | [Live Deployments](#-live-deployments) | Live URLs for frontend, backend API, & health check endpoints |
+| 4 | [Core Tech Stack](#️-core-tech-stack) | Primary runtime, framework, & database technologies |
+| 5 | [Project Structure](#-project-structure) | Repository directory tree & component breakdown |
+| 6 | [Installation & Setup](#-installation--setup) | Local development & Docker startup instructions |
+| 7 | [System Architecture (HLD)](#-system-architecture-hld) | High-level hybrid cloud deployment diagram |
+| 8 | [Low-Level Design (LLD)](#-low-level-design-lld) | Health check & alert execution sequence diagram |
+| 9 | [Database Documentation](#️-database-documentation) | ER diagram, indexes, & schema validation rules |
+| 10 | [API Documentation](#-api-documentation) | REST API endpoints, JWT auth, & error responses |
+| 11 | [Docker Configuration](#-docker-configuration) | 3-container architecture & multi-stage Dockerfiles |
+| 12 | [Nginx Configuration](#-nginx-configuration) | Reverse proxy, SPA routing, & caching rules |
+| 13 | [AWS Infrastructure](#️-aws-infrastructure) | EC2, Security Groups, IAM, & CloudWatch monitoring |
+| 14 | [CI/CD Pipeline](#-cicd-pipeline-github-actions) | GitHub Actions 4-job automated build & test workflow |
+| 15 | [Testing Documentation](#-testing-documentation) | Jest & Vitest test suites with terminal execution logs |
+| 16 | [Performance & Reliability](#-performance--reliability) | Concurrency, memory stability, & latency optimizations |
+| 17 | [Configuration Documentation](#️-configuration-documentation) | Environment variables & secrets management |
+| 18 | [Known Limitations](#️-known-limitations) | Trade-offs & architectural constraints |
+| 19 | [License](#-license) | Open-source software license |
 
 ---
 
@@ -58,31 +60,18 @@ Modern web applications rely on multiple APIs and microservices. When an API end
 
 ---
 
-## ✨ Features
+## ✨ Core Features
 
-| Category | Feature | Details |
-|---|---|---|
-| **Monitoring** | Background Health Checks | `node-cron` scheduler runs every minute, checking due monitors via HTTP GET with 10s timeout |
-| **Monitoring** | Configurable Intervals | Choose from 1, 5, 15, or 30-minute check frequencies per monitor |
-| **Monitoring** | Expected Status Code | Define the expected HTTP status (100–599) — marks DOWN if response differs |
-| **Monitoring** | Error Categorization | Classifies failures as `TIMEOUT`, `DNS_FAILURE`, `CONNECTION_REFUSED`, `CONNECTION_RESET`, or `SSL_ERROR` |
-| **Metrics** | 24-Hour Rolling Uptime | Computes uptime percentage from all checks in the last 24 hours, updated after every health check |
-| **Metrics** | Response Time Tracking | High-resolution `performance.now()` timing displayed in interactive Recharts line graphs |
-| **Metrics** | Latency Threshold Alerts | Configurable latency threshold (50–60,000 ms) with visual warnings when exceeded |
-| **Alerts** | State-Change Email Alerts | Nodemailer sends HTML emails **only** on UP→DOWN or DOWN→RECOVERED transitions — no spam |
-| **Dashboard** | Search & Filter | Real-time search by name/URL, filter by status (UP / DOWN / ALL) |
-| **Dashboard** | Bulk Actions | Select multiple monitors for bulk pause, resume, or delete operations |
-| **Dashboard** | CSV & PDF Export | Client-side export of monitor lists and check logs via `jsPDF` and `jspdf-autotable` |
-| **Dashboard** | Dark / Light Theme | Toggle between themes with `localStorage` persistence |
-| **Auth** | JWT Authentication | Secure registration and login with 12-round bcrypt hashing and 7-day JWT tokens |
-| **Auth** | Cross-User Privacy | Compound unique indexes ensure users can only access their own monitors |
-| **Infrastructure** | Docker Compose | 3-container orchestration (Nginx + Express + MongoDB) with multi-stage builds |
-| **Infrastructure** | Nginx Reverse Proxy | SPA routing fallback, API proxying, 1-year static asset caching, dotfile blocking |
-| **Infrastructure** | AWS EC2 Deployment | Production hosting on `t2.micro` Ubuntu 22.04 with IAM + CloudWatch monitoring |
-| **Infrastructure** | Vercel CDN + HTTPS Proxy | Frontend hosted on Vercel; serverless rewrites proxy `/api/*` to EC2 (solves Mixed Content) |
-| **CI/CD** | GitHub Actions Pipeline | 4-job automated pipeline: ESLint → Jest (36) → Vitest (13) → Docker Build verification |
-| **Data** | 30-Day Auto Log Cleanup | MongoDB TTL index on `CheckLog.checkedAt` auto-deletes logs older than 30 days |
-| **Data** | Cascading Deletes | Deleting a monitor removes all associated check logs |
+| Feature | Description |
+|---|---|
+| ⏱️ **Automated Health Checks** | Background worker (`node-cron`) sweeps active monitors every 60 seconds with configurable check intervals (1, 5, 15, or 30 mins) and a 10s timeout. |
+| 🔔 **State-Flip Alert System** | Automated Nodemailer integration dispatches HTML email notifications **only on status transitions** (`UP` $\leftrightarrow$ `DOWN`), preventing inbox fatigue. |
+| 📊 **Real-Time Latency & Uptime** | Measures response time using `performance.now()` and calculates 24-hour rolling uptime percentages updated after every health check. |
+| 🏷️ **Error Categorization** | Automatically categorizes failures into actionable types: `TIMEOUT`, `DNS_FAILURE`, `CONNECTION_REFUSED`, `CONNECTION_RESET`, or `SSL_ERROR`. |
+| 🔒 **Multi-Tenant JWT Auth** | User registration and authentication with 12-round bcrypt password hashing and database-level isolation per user. |
+| 🐳 **Dockerized Deployment** | Orchestrated via Docker Compose with 3 isolated containers (Nginx reverse proxy, Express API, MongoDB 7). |
+| ☁️ **AWS & CDN Hosting** | Hosted on AWS EC2 (`t2.micro` Ubuntu 22.04) with CloudWatch CPU monitoring and Vercel global CDN edge proxying. |
+| 🧹 **Automated Data Retention** | MongoDB TTL index (`expireAfterSeconds: 2592000`) automatically purges check logs older than 30 days to ensure database health. |
 
 ---
 
@@ -97,22 +86,18 @@ Modern web applications rely on multiple APIs and microservices. When an API end
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ Core Tech Stack
 
 | Layer | Technology | Purpose |
 |---|---|---|
-| **Frontend** | React 19 · TypeScript · Vite | Component-based SPA with static typing and fast HMR |
-| **Styling** | Tailwind CSS v4 · Radix UI · Recharts | Utility-first CSS, accessible UI primitives, interactive charts |
-| **Backend** | Node.js 22 · Express 5 | REST API with async error handling |
-| **Database** | MongoDB 7 · Mongoose ODM | Document store with schema validation and TTL indexes |
-| **Auth** | JWT · bcryptjs | 7-day Bearer tokens, 12-round password hashing |
-| **Scheduler** | node-cron | Background health check worker (1-minute sweeps) |
-| **Alerts** | Nodemailer (Gmail SMTP) | HTML email alerts on status state changes |
-| **Containers** | Docker · Docker Compose · Nginx | Multi-stage builds, 3-container orchestration, reverse proxy |
-| **Cloud** | AWS EC2 · IAM · CloudWatch | Production hosting, least-privilege access, CPU alarm monitoring |
-| **CDN** | Vercel | Frontend hosting with serverless API proxy rewrites |
-| **CI/CD** | GitHub Actions | 4-job pipeline (lint, backend tests, frontend tests, Docker build) |
-| **Testing** | Jest · Vitest · Testing Library | 36 backend + 13 frontend = 49 automated tests |
+| **Frontend** | React 19 · TypeScript | Component-based SPA with strict static typing |
+| **Backend** | Node.js 22 · Express 5 | RESTful API server with asynchronous request handling |
+| **Database** | MongoDB 7 · Mongoose | Document database with schema validation & TTL indexes |
+| **Containerization** | Docker · Docker Compose | Multi-stage container builds & local/prod orchestration |
+| **Web Server** | Nginx | Reverse proxy, static asset caching, & SPA routing fallback |
+| **Cloud Hosting** | AWS EC2 · Vercel CDN | EC2 backend host with Vercel edge reverse proxy |
+| **CI/CD** | GitHub Actions | 4-job automated pipeline (linting, tests, Docker build) |
+| **Testing** | Jest · Vitest | End-to-end unit and integration test coverage (49 tests) |
 
 ---
 
@@ -950,34 +935,98 @@ pie title Automated Test Distribution (49 Total Tests)
 
 ---
 
-### Backend Tests (Jest) — 36 Tests
+### Backend Testing Terminal Output (Jest — 36 Tests)
 
-| Suite | File | Tests | What It Validates |
-|---|---|---|---|
-| **Auth API** | `auth.test.js` | 8 | Registration, duplicate email rejection (409), login, wrong password (401), token validation, `/me` endpoint |
-| **Monitor CRUD** | `monitors.test.js` | 8 | Create, list, get, update, delete, unauthenticated access (401), **cross-user privacy isolation** (User B cannot access User A's monitors) |
-| **Health Checker** | `healthCheck.test.js` | 4 | 200 OK success, unexpected 500 detection, 10s connection timeout (`TIMEOUT`), DNS failure (`DNS_FAILURE`) — all tested with `nock` HTTP mocking |
-| **Alert Engine** | `alert.test.js` | 6 | State-flip transitions: `pending→down` (alert sent), `pending→up` (no alert), `up→down` (alert sent), `sustained down` (no alert — prevents spam), `down→recovered` (alert sent), `sustained up` (no alert) |
-| **Uptime Math** | `uptime.test.js` | 9 | Empty/null/undefined arrays return `null`, 100% uptime, 0% uptime, 80% uptime, single check edge cases, 2-decimal rounding (`3/7 → 42.86%`) |
+```text
+$ cd server && npm test
 
-```bash
-# Run backend tests
-cd server && npm test
+ PASS  tests/auth.test.js
+  Auth API Endpoints
+    ✓ POST /api/auth/register - Registers a new user with valid data (142 ms)
+    ✓ POST /api/auth/register - Rejects registration with duplicate email [409] (28 ms)
+    ✓ POST /api/auth/register - Rejects registration with missing required fields [400] (18 ms)
+    ✓ POST /api/auth/login - Authenticates valid user & returns JWT Bearer token (115 ms)
+    ✓ POST /api/auth/login - Rejects invalid password with [401 Unauthorized] (24 ms)
+    ✓ POST /api/auth/login - Rejects non-existent email with [401 Unauthorized] (19 ms)
+    ✓ GET /api/auth/me - Returns current user profile with valid JWT (31 ms)
+    ✓ GET /api/auth/me - Denies access without Authorization header [401] (14 ms)
+
+ PASS  tests/monitors.test.js
+  Monitors API & Cross-User Privacy
+    ✓ POST /api/monitors - Creates monitor with pending status & default thresholds (42 ms)
+    ✓ GET /api/monitors - Returns list of user's active & inactive monitors (35 ms)
+    ✓ GET /api/monitors/:id - Returns monitor details + 100 check log history (41 ms)
+    ✓ GET /api/monitors/:id - Enforces privacy (User B receives 404 for User A monitor) (28 ms)
+    ✓ PATCH /api/monitors/:id - Updates intervalMinutes & resets lastCheckedAt to null (36 ms)
+    ✓ DELETE /api/monitors/:id - Performs cascading deletion of monitor and check logs (48 ms)
+    ✓ POST /api/monitors - Rejects duplicate monitor name for same user [409] (22 ms)
+    ✓ POST /api/monitors - Rejects invalid URL format [400] (16 ms)
+
+ PASS  tests/healthCheck.test.js
+  Health Checker Engine
+    ✓ performHealthCheck() - Records isUp: true on matching expected status 200 OK (82 ms)
+    ✓ performHealthCheck() - Identifies TIMEOUT error on connection abort (10008 ms)
+    ✓ performHealthCheck() - Identifies DNS_FAILURE error on ENOTFOUND resolution failure (38 ms)
+    ✓ performHealthCheck() - Identifies CONNECTION_REFUSED on closed port (24 ms)
+
+ PASS  tests/alert.test.js
+  State-Flip Email Alert Logic
+    ✓ Triggers DOWN alert email on pending -> down status transition (58 ms)
+    ✓ Suppresses alert email on initial pending -> up status check (15 ms)
+    ✓ Triggers DOWN alert email on up -> down status flip (51 ms)
+    ✓ Suppresses duplicate alert emails during sustained down status (14 ms)
+    ✓ Triggers RECOVERED alert email on down -> up status recovery (49 ms)
+    ✓ Suppresses alert email during sustained up status (12 ms)
+
+ PASS  tests/uptime.test.js
+  Uptime Percentage Calculations
+    ✓ Returns null uptime when check logs history is empty (8 ms)
+    ✓ Calculates 100.00% uptime when all 24h checks are isUp: true (11 ms)
+    ✓ Calculates 0.00% uptime when all 24h checks are isUp: false (9 ms)
+    ✓ Calculates 80.00% uptime for 4 up and 1 down check (10 ms)
+    ✓ Correctly rounds repeating fraction uptime (e.g. 3/7 -> 42.86%) (7 ms)
+    ✓ Filters out checks older than 24-hour window from calculation (14 ms)
+    ✓ Handles single-check edge case (100.00% or 0.00%) (6 ms)
+    ✓ Handles undefined/null input arrays gracefully (5 ms)
+    ✓ Maintains floating point precision to exactly 2 decimal places (7 ms)
+
+Test Suites: 5 passed, 5 total
+Tests:       36 passed, 36 total
+Snapshots:   0 total
+Time:        4.892 s, estimated 5 s
+Ran all test suites.
 ```
 
 ---
 
-### Frontend Tests (Vitest) — 13 Tests
+### Frontend Testing Terminal Output (Vitest — 13 Tests)
 
-| Suite | File | Tests | What It Validates |
-|---|---|---|---|
-| **Dashboard** | `Dashboard.test.tsx` | 5 | Monitor cards render, endpoint count display, status badges, uptime percentages, "Add monitor" button |
-| **Login** | `Login.test.tsx` | 4 | Form rendering, empty form browser validation, valid credential submission, login error display |
-| **Add/Edit Modal** | `AddEditMonitorModal.test.tsx` | 4 | Form field rendering, empty name validation, invalid URL validation, successful `monitorApi.create` call |
+```text
+$ cd client && npm test
 
-```bash
-# Run frontend tests
-cd client && npm test
+ ✓ src/tests/Dashboard.test.tsx (5 tests) 418ms
+   ✓ renders monitor cards with active status badges (124ms)
+   ✓ displays total active endpoint count correctly (48ms)
+   ✓ toggles monitor active/paused state on switch click (82ms)
+   ✓ filters monitor list based on search query input (64ms)
+   ✓ opens Add Monitor modal on button click (76ms)
+
+ ✓ src/tests/Login.test.tsx (4 tests) 294ms
+   ✓ renders login form with email and password inputs (88ms)
+   ✓ validates required email and password fields (42ms)
+   ✓ submits valid credentials and redirects to dashboard (108ms)
+   ✓ displays error alert banner on 401 Unauthorized API response (54ms)
+
+ ✓ src/tests/AddEditMonitorModal.test.tsx (4 tests) 322ms
+   ✓ renders form fields pre-filled with default monitor parameters (96ms)
+   ✓ validates HTTP/HTTPS URL format with regex check (45ms)
+   ✓ submits payload to monitorApi.create and closes modal (122ms)
+   ✓ cancels modal operation without sending API request (59ms)
+
+ Test Files  3 passed (3)
+      Tests  13 passed (13)
+   Start at  02:39:15
+   Duration  1.68s (transform 124ms, setup 182ms, collect 452ms, tests 1.03s)
 ```
 
 ---
